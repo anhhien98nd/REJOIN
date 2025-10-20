@@ -1,4 +1,4 @@
--- 🌸 Reset Character Script (chỉ dành cho acc "tên")
+-- 🌸 Reset Character Script (chỉ dành cho acc "ikkopolconloli")
 local Players = game:GetService("Players")
 local p = Players.LocalPlayer
 
@@ -7,8 +7,8 @@ if not p then
     return
 end
 
-if p.Name ~= "tên" then
-    warn("[Reset] 🚫 Bỏ qua — chỉ acc 'tên' mới được reset.")
+if p.Name ~= "ikkopolconloli" then
+    warn("[Reset] 🚫 Bỏ qua — chỉ acc 'ikkopolconloli' mới được reset.")
     return
 end
 
