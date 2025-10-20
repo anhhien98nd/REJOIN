@@ -10,6 +10,12 @@ local schedule = {
     {27, 31},  
     {50, 54},  
     {71, 75},  
+    {103, 107},
+    {126, 130},
+    {147, 151},
+    {179, 183},
+    {202, 206},
+    {223, 227},
 }
 
 -- Tìm remote: ReplicatedStorage → BridgeNet2 → dataRemoteEvent
@@ -77,4 +83,4 @@ for i, window in ipairs(schedule) do
     else
         warn(("[Auto Spam M1] Schedule #%d không hợp lệ (start=%s, end=%s)"):format(i, tostring(start_time), tostring(end_time)))
     end
-end 
+end
