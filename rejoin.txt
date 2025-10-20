@@ -1,4 +1,4 @@
--- 🌸 Rejoin Script (Chỉ dành cho acc "ddumevailn")
+-- 🌸 Rejoin Script (Chỉ dành cho acc "tênngườichơi")
 
 local Players = game:GetService("Players")
 local TeleportService = game:GetService("TeleportService")
@@ -9,8 +9,8 @@ if not p then
     return
 end
 
-if p.Name ~= "ddumevailn" then
-    warn("[Rejoin] 🚫 Bỏ qua — chỉ acc 'ddumevailn' mới được rejoin.")
+if p.Name ~= "tênngườichơi" then
+    warn("[Rejoin] 🚫 Bỏ qua — chỉ acc 'tênngườichơi' mới được rejoin.")
     return
 end
 
@@ -27,3 +27,4 @@ pcall(function()
 end)
 
 print("[Rejoin] ✅ Đã gửi yêu cầu rejoin server hiện tại cho:", p.Name)
+
