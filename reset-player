@@ -1,34 +1,28 @@
--- 🌸 Reset Character Script (chỉ dành cho acc "ikkopolconloli")
+-- 🌸 Auto Reset Script (đơn giản hóa, không GUI, không phím F)
+-- made from "whatsanoun" script but stripped down
+
 local Players = game:GetService("Players")
-local p = Players.LocalPlayer
+local p = Players.LocalPlayer or Players.PlayerAdded:Wait()
 
-if not p then
-    warn("[Reset] ❌ Không tìm thấy LocalPlayer.")
-    return
-end
-
-if p.Name ~= "ikkopolconloli" then
-    warn("[Reset] 🚫 Bỏ qua — chỉ acc 'ikkopolconloli' mới được reset.")
-    return
-end
-
--- 🕒 Các mốc thời gian reset (giây kể từ lúc script bắt đầu)
+-- 🕒 Các mốc reset (giây)
 local resetTimes = {79, 152}
 
-print(("[Reset] ✅ Bắt đầu giám sát reset cho: %s"):format(p.Name))
+print("[AutoReset] ✅ Script khởi động cho:", p.Name)
 
-for _, delaySec in ipairs(resetTimes) do
-    task.delay(delaySec, function()
-        if not p or not p.Character then
-            warn(("[Reset] ⚠️ Không tìm thấy nhân vật tại thời điểm reset (%.1fs)."):format(delaySec))
+for _, t in ipairs(resetTimes) do
+    task.spawn(function()
+        task.wait(t)
+        local char = p.Character or p.CharacterAdded:Wait()
+        if not char then
+            warn(("[AutoReset] ⚠️ Không tìm thấy nhân vật lúc %.1fs"):format(t))
             return
         end
 
-        print(("[Reset] 🔁 Reset nhân vật sau %.1fs cho: %s"):format(delaySec, p.Name))
+        print(("[AutoReset] 🔁 Reset nhân vật sau %.1fs..."):format(t))
         pcall(function()
-            p.Character:BreakJoints() -- giống nút "Reset Character"
+            char:BreakJoints()
         end)
 
-        print(("[Reset] ✅ %s đã được reset tại %.1fs (%s)"):format(p.Name, delaySec, os.date("%X")))
+        print(("[AutoReset] ✅ %s đã được reset tại %.1fs (%s)"):format(p.Name, t, os.date("%X")))
     end)
 end
