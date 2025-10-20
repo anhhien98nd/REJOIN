@@ -6,7 +6,13 @@
 local schedule = {
     {26, 32},  
     {49, 55},  
-    {70, 77},  
+    {70, 77},
+    {102, 109},
+    {125, 132},
+    {146, 154},
+    {178, 185},
+    {201, 208},
+    {222, 230},
 }
 
 -- Tìm remote: ReplicatedStorage -> BridgeNet2 -> dataRemoteEvent
@@ -64,4 +70,4 @@ for i, window in ipairs(schedule) do
     else
         warn(("[Auto Shield] Schedule #%d không hợp lệ (start=%s, end=%s)"):format(i, tostring(start_time), tostring(end_time)))
     end
-end 
+end
