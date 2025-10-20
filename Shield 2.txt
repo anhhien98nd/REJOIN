@@ -6,12 +6,12 @@ local schedule = {
     {14, 21},  
     {38, 45},  
     {60, 67},  
-    {90, 97},   
-    {114, 121},
-    {136, 143},
-    {166, 173},
-    {190, 197},
-    {212, 219},
+    {103, 107},   
+    {126, 130},
+    {147, 151},
+    {179, 183},
+    {202, 206},
+    {223, 227},
 }
 
 -- tìm remote: ReplicatedStorage -> BridgeNet2 -> dataRemoteEvent (fallback: tìm descendants)
