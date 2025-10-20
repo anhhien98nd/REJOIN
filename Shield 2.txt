@@ -3,9 +3,9 @@
 -- Khi có ít nhất 1 cửa sổ đang active => gửi shield = true. Khi không còn cửa sổ nào => gửi shield = false.
 
 local schedule = {
-    {59, 67},  -- bắt đầu 59s, kết thúc 67s
-    {83, 91},  -- bắt đầu 83s, kết thúc 91
-    {105, 113},  -- bắt đầu 105s, kết thúc 113s
+    {14, 21},  
+    {38, 45},  
+    {60, 67},  
 }
 
 -- tìm remote: ReplicatedStorage -> BridgeNet2 -> dataRemoteEvent (fallback: tìm descendants)
