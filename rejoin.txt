@@ -1,4 +1,4 @@
--- 🌸 Rejoin Script (Chỉ dành cho acc "ikkopolconloli")
+-- 🌸 Rejoin Script (Dành cho tất cả người chơi)
 
 local Players = game:GetService("Players")
 local TeleportService = game:GetService("TeleportService")
@@ -9,15 +9,10 @@ if not p then
     return
 end
 
-if p.Name ~= "ikkopolconloli" then
-    warn("[Rejoin] 🚫 Bỏ qua — chỉ acc 'ikkopolconloli' mới được rejoin.")
-    return
-end
-
 -- 🕒 Hẹn Rejoin sau 228 giây
 print("[Rejoin] ⏳ Sẽ rejoin sau 228 giây cho tài khoản:", p.Name)
 
-task.delay(228, function()
+task.delay(1, function()
     print("[Rejoin] 🔁 Đang rejoin tài khoản:", p.Name)
 
     -- Giãn 1 chút để tránh crash
@@ -31,4 +26,3 @@ task.delay(228, function()
 
     print("[Rejoin] ✅ Đã gửi yêu cầu rejoin server hiện tại cho:", p.Name, "lúc:", os.date("%X"))
 end)
-
