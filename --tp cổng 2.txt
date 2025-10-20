@@ -1,38 +1,28 @@
---[[ 
-=============================
-🚫 PHẦN CODE GỐC — KHÔNG CHẠY
-=============================
-
--- [Phần code gốc của bạn ở đây]
-(local Players = game:GetService("Players")
-local p = Players.LocalPlayer
-...
-end)
--- HẾT PHẦN CODE GỐC
-]]
-
--- ==============================================
--- ✅ PHẦN CODE CHẠY THỰC TẾ: AUTO TELEPORT
--- ==============================================
-
+-- 🌀 Auto Teleport Cổng 2 (teleport 2 lần, sau 3s và sau 83s kể từ bắt đầu)
 local Players = game:GetService("Players")
 local p = Players.LocalPlayer
 
--- 🕒 AUTO TELE "Cổng 2" SAU 3 GIÂY RỒI TẮT SAU 1 GIÂY
-task.spawn(function()
-	task.wait(3)
-	print("[AUTO] Dịch chuyển tới Cổng 2 sau 3 giây")
+local teleportPos = Vector3.new(18.37334884643555, 0.37274569272994995, -140.72775268554688)
 
-	-- Vị trí cổng 2
-	local v = Vector3.new(18.37334884643555, 0.37274569272994995, -140.72775268554688)
-
+local function teleportToGate()
 	local chr = p.Character or p.CharacterAdded:Wait()
 	local hrp = chr:FindFirstChild("HumanoidRootPart")
 	if hrp then
-		hrp.CFrame = CFrame.new(v + Vector3.new(0,5,0))
+		hrp.CFrame = CFrame.new(teleportPos + Vector3.new(0, 5, 0))
+		print("[AUTO] Đã dịch chuyển tới Cổng 2 tại:", os.date("%X"))
+	else
+		warn("[AUTO] Không tìm thấy HumanoidRootPart — không thể dịch chuyển.")
 	end
+end
 
-	-- Giữ trong 1 giây rồi “tắt”
-	task.wait(1)
-	print("[AUTO] Dừng teleport sau 1 giây")
-end) 
+task.spawn(function()
+	-- 🔹 Lần 1: sau 3 giây
+	task.wait(3)
+	print("[AUTO] Dịch chuyển tới Cổng 2 (lần 1 sau 3 giây)")
+	teleportToGate()
+
+	-- 🔹 Lần 2: sau thêm 80 giây (tổng 83 giây từ đầu)
+	task.wait(80)
+	print("[AUTO] Dịch chuyển lại tới Cổng 2 (lần 2 sau 83 giây)")
+	teleportToGate()
+end)
