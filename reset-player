@@ -12,19 +12,23 @@ if p.Name ~= "tên" then
     return
 end
 
--- 🕒 Hẹn reset sau 79 giây
-print("[Reset] ⏳ Sẽ reset nhân vật sau 79 giây cho:", p.Name)
+-- 🕒 Các mốc thời gian reset (giây kể từ lúc script bắt đầu)
+local resetTimes = {79, 152}
 
-task.delay(79, function()
-    if not p or not p.Character then
-        warn("[Reset] ⚠️ Không tìm thấy nhân vật tại thời điểm reset.")
-        return
-    end
+print(("[Reset] ✅ Bắt đầu giám sát reset cho: %s"):format(p.Name))
 
-    print("[Reset] 🔁 Đang reset nhân vật cho:", p.Name)
-    pcall(function()
-        p.Character:BreakJoints() -- Giống nút "Reset Character"
+for _, delaySec in ipairs(resetTimes) do
+    task.delay(delaySec, function()
+        if not p or not p.Character then
+            warn(("[Reset] ⚠️ Không tìm thấy nhân vật tại thời điểm reset (%.1fs)."):format(delaySec))
+            return
+        end
+
+        print(("[Reset] 🔁 Reset nhân vật sau %.1fs cho: %s"):format(delaySec, p.Name))
+        pcall(function()
+            p.Character:BreakJoints() -- giống nút "Reset Character"
+        end)
+
+        print(("[Reset] ✅ %s đã được reset tại %.1fs (%s)"):format(p.Name, delaySec, os.date("%X")))
     end)
-
-    print("[Reset] ✅ Nhân vật của", p.Name, "đã được reset lúc:", os.date("%X"))
-end)
+end
