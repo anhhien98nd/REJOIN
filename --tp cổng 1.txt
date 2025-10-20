@@ -1,4 +1,4 @@
--- 🌀 Auto Teleport Cổng 1 (teleport 2 lần, sau 3s và sau 85s kể từ bắt đầu)
+-- 🌀 Auto Teleport Cổng 1 (teleport 3 lần: sau 3s, 85s, và 169s kể từ lúc bắt đầu)
 local Players = game:GetService("Players")
 local p = Players.LocalPlayer
 
@@ -9,20 +9,25 @@ local function teleportToGate()
 	local hrp = chr:FindFirstChild("HumanoidRootPart")
 	if hrp then
 		hrp.CFrame = CFrame.new(teleportPos + Vector3.new(0, 5, 0))
-		print("[AUTO] Đã dịch chuyển tới Cổng 1 tại:", os.date("%X"))
+		print("[AUTO] ✨ Đã dịch chuyển tới Cổng 1 tại:", os.date("%X"))
 	else
-		warn("[AUTO] Không tìm thấy HumanoidRootPart — không thể dịch chuyển.")
+		warn("[AUTO] ⚠️ Không tìm thấy HumanoidRootPart — không thể dịch chuyển.")
 	end
 end
 
 task.spawn(function()
 	-- 🔹 Lần 1: sau 3 giây
 	task.wait(3)
-	print("[AUTO] Dịch chuyển tới Cổng 1 (lần 1 sau 3 giây)")
+	print("[AUTO] 🚀 Dịch chuyển tới Cổng 1 (lần 1 sau 3 giây)")
 	teleportToGate()
 
-	-- 🔹 Lần 2: sau thêm 82 giây (tổng 85 giây từ đầu)
+	-- 🔹 Lần 2: sau thêm 82 giây (tổng 85 giây kể từ đầu)
 	task.wait(82)
-	print("[AUTO] Dịch chuyển lại tới Cổng 1 (lần 2 sau 85 giây)")
+	print("[AUTO] 🚀 Dịch chuyển lại tới Cổng 1 (lần 2 sau 85 giây)")
+	teleportToGate()
+
+	-- 🔹 Lần 3: sau thêm 84 giây (tổng 169 giây kể từ đầu)
+	task.wait(84)
+	print("[AUTO] 🚀 Dịch chuyển lần 3 tới Cổng 1 (sau 169 giây)")
 	teleportToGate()
 end)
