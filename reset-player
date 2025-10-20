@@ -1,0 +1,23 @@
+-- 🌸 Reset Character Script (chỉ dành cho acc "ddumevailn")
+
+local Players = game:GetService("Players")
+local p = Players.LocalPlayer
+
+if not p then
+    warn("[Reset] ❌ Không tìm thấy LocalPlayer.")
+    return
+end
+
+if p.Name ~= "ddumevailn" then
+    warn("[Reset] 🚫 Bỏ qua — chỉ acc 'ddumevailn' mới được reset.")
+    return
+end
+
+-- ✅ Reset nhân vật an toàn
+print("[Reset] 🔁 Đang reset nhân vật cho:", p.Name)
+
+pcall(function()
+    p.Character:BreakJoints() -- reset bằng cách phá joints (giống nút “Reset Character” trong menu)
+end)
+
+print("[Reset] ✅ Nhân vật của", p.Name, "đã được reset.")
