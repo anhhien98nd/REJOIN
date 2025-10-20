@@ -1,0 +1,43 @@
+-- Auto TP1 Lock: bật tại giây 10, tắt tại giây 134 (tổng)
+local Players = game:GetService("Players")
+local p = Players.LocalPlayer
+
+local STATE = { tp1 = false }
+
+task.spawn(function()
+	-- Chờ 10s rồi bật
+	task.wait(10)
+	print("[AUTO] Bật TP1 Lock tại giây 10")
+	STATE.tp1 = true
+
+	local pos = Vector3.new(40,3.63,-130.14)
+	local look
+	pcall(function()
+		look = p.Character and p.Character:FindFirstChild("HumanoidRootPart")
+			and p.Character.HumanoidRootPart.CFrame.LookVector
+	end)
+
+	-- Giữ lock khi bật
+	task.spawn(function()
+		while STATE.tp1 do
+			task.wait()
+			local c = p.Character
+			if c then
+				local hrp = c:FindFirstChild("HumanoidRootPart")
+				if hrp then
+					hrp.Velocity = Vector3.new()
+					if look then
+						hrp.CFrame = CFrame.new(pos, pos + look)
+					else
+						hrp.CFrame = CFrame.new(pos)
+					end
+				end
+			end
+		end
+	end)
+
+	-- Tắt tại giây 134 tổng 
+	task.wait(134)
+	STATE.tp1 = false
+	print("[AUTO] Tắt TP1 Lock tại giây 134 (tổng)")
+end)

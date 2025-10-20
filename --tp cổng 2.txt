@@ -1,0 +1,38 @@
+--[[ 
+=============================
+🚫 PHẦN CODE GỐC — KHÔNG CHẠY
+=============================
+
+-- [Phần code gốc của bạn ở đây]
+(local Players = game:GetService("Players")
+local p = Players.LocalPlayer
+...
+end)
+-- HẾT PHẦN CODE GỐC
+]]
+
+-- ==============================================
+-- ✅ PHẦN CODE CHẠY THỰC TẾ: AUTO TELEPORT
+-- ==============================================
+
+local Players = game:GetService("Players")
+local p = Players.LocalPlayer
+
+-- 🕒 AUTO TELE "Cổng 2" SAU 3 GIÂY RỒI TẮT SAU 1 GIÂY
+task.spawn(function()
+	task.wait(3)
+	print("[AUTO] Dịch chuyển tới Cổng 2 sau 3 giây")
+
+	-- Vị trí cổng 2
+	local v = Vector3.new(18.37334884643555, 0.37274569272994995, -140.72775268554688)
+
+	local chr = p.Character or p.CharacterAdded:Wait()
+	local hrp = chr:FindFirstChild("HumanoidRootPart")
+	if hrp then
+		hrp.CFrame = CFrame.new(v + Vector3.new(0,5,0))
+	end
+
+	-- Giữ trong 1 giây rồi “tắt”
+	task.wait(1)
+	print("[AUTO] Dừng teleport sau 1 giây")
+end) 

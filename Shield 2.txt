@@ -1,0 +1,85 @@
+-- Auto Shield (scheduled windows, standalone)
+-- Mỗi entry trong `schedule` là {start_seconds, end_seconds} tính từ lúc script bắt đầu (tick0).
+-- Khi có ít nhất 1 cửa sổ đang active => gửi shield = true. Khi không còn cửa sổ nào => gửi shield = false.
+
+local schedule = {
+    {59, 67},  -- bắt đầu 59s, kết thúc 67s
+    {83, 91},  -- bắt đầu 83s, kết thúc 91
+    {105, 113},  -- bắt đầu 105s, kết thúc 113s
+}
+
+-- tìm remote: ReplicatedStorage -> BridgeNet2 -> dataRemoteEvent (fallback: tìm descendants)
+local remote
+pcall(function()
+    local rs = game:GetService("ReplicatedStorage")
+    local bridge = rs:FindFirstChild("BridgeNet2")
+    if bridge then
+        remote = bridge:FindFirstChild("dataRemoteEvent")
+    end
+    if not remote then
+        for _, v in ipairs(rs:GetDescendants()) do
+            if v.Name == "dataRemoteEvent" then
+                remote = v
+                break
+            end
+        end
+    end
+end)
+
+local function safeFireShield(state)
+    if remote then
+        pcall(function()
+            remote:FireServer({ state, "\024" })
+        end)
+    else
+        if not safeFireShield._warned then
+            safeFireShield._warned = true
+            warn("[Auto Shield] Không tìm thấy dataRemoteEvent; không gửi được yêu cầu.")
+        end
+    end
+end
+
+-- quản lý trạng thái khi có nhiều cửa sổ (đếm số cửa sổ active)
+local activeCount = 0
+local tick0 = tick()
+
+for i, win in ipairs(schedule) do
+    local startT, endT = win[1], win[2]
+    if type(startT) ~= "number" or type(endT) ~= "number" or endT <= startT then
+        warn(("[Auto Shield] Schedule #%d không hợp lệ (start=%s end=%s) - bỏ qua"):format(i, tostring(startT), tostring(endT)))
+    else
+        task.spawn(function()
+            -- chờ đến thời điểm bắt đầu
+            local waitUntil = tick0 + startT
+            local toWait = waitUntil - tick()
+            if toWait > 0 then task.wait(toWait) end
+
+            -- nếu đã qua end time thì bỏ qua
+            if tick() >= tick0 + endT then
+                warn(("[Auto Shield] Schedule #%d đã trôi qua trước khi bắt đầu - bỏ qua."):format(i))
+                return
+            end
+
+            -- bắt đầu cửa sổ: tăng counter; nếu từ 0 -> 1 thì bật shield
+            activeCount = activeCount + 1
+            if activeCount == 1 then
+                print(("[Auto Shield] Schedule #%d ON (%.1fs -> %.1fs) -> gửi SHIELD = true"):format(i, startT, endT))
+                safeFireShield(true)
+            else
+                print(("[Auto Shield] Schedule #%d ON (%.1fs -> %.1fs) -> activeCount=%d"):format(i, startT, endT, activeCount))
+            end
+
+            -- chờ tới end time rồi giảm counter; nếu xuống 0 thì tắt shield
+            local waitEnd = (tick0 + endT) - tick()
+            if waitEnd > 0 then task.wait(waitEnd) end
+
+            activeCount = math.max(0, activeCount - 1)
+            if activeCount == 0 then
+                print(("[Auto Shield] Schedule #%d OFF (kết thúc %.1fs) -> gửi SHIELD = false"):format(i, endT))
+                safeFireShield(false)
+            else
+                print(("[Auto Shield] Schedule #%d OFF (kết thúc %.1fs) -> còn activeCount=%d"):format(i, endT, activeCount))
+            end
+        end)
+    end
+end 
