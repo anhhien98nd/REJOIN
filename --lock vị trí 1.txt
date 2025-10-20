@@ -1,4 +1,4 @@
--- 🌸 Auto TP1 Lock 2 Giai Đoạn
+-- 🌸 Auto TP1 Lock 3 Giai Đoạn
 local Players = game:GetService("Players")
 local p = Players.LocalPlayer
 local STATE = { tp1 = false }
@@ -42,11 +42,11 @@ local function stopLock()
 end
 
 task.spawn(function()
+    local pos = Vector3.new(40, 3.63, -130.14)
+
     -- 🕒 Giai đoạn 1: bật lúc 10s, tắt lúc 77s
     task.wait(10)
-    local pos = Vector3.new(40, 3.63, -130.14)
     startLock(pos)
-
     task.wait(77 - 10)
     stopLock()
     print("[AUTO] ✅ Kết thúc giai đoạn 1 tại 77s")
@@ -55,8 +55,15 @@ task.spawn(function()
     task.wait(89 - 77)
     startLock(pos)
     print("[AUTO] 🔁 Bật lại TP1 Lock tại giây 89")
-
     task.wait(151 - 89)
     stopLock()
     print("[AUTO] ✅ Tắt TP1 Lock lần 2 tại giây 151")
+
+    -- 🕒 Giai đoạn 3: bật lúc 176s, tắt lúc 228s
+    task.wait(176 - 151)
+    startLock(pos)
+    print("[AUTO] 🔁 Bật lại TP1 Lock tại giây 176")
+    task.wait(228 - 176)
+    stopLock()
+    print("[AUTO] ✅ Tắt TP1 Lock lần 3 tại giây 228")
 end)
