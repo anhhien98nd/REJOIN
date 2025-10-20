@@ -6,6 +6,12 @@ local schedule = {
     {14, 21},  
     {38, 45},  
     {60, 67},  
+    {90, 97},   
+    {114, 121},
+    {136, 143},
+    {166, 173},
+    {190, 197},
+    {212, 219},
 }
 
 -- tìm remote: ReplicatedStorage -> BridgeNet2 -> dataRemoteEvent (fallback: tìm descendants)
@@ -82,4 +88,4 @@ for i, win in ipairs(schedule) do
             end
         end)
     end
-end 
+end
