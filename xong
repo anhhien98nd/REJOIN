@@ -1,0 +1,56 @@
+-- 🌸 Auto Loader (2 user version)
+local Players = game:GetService("Players")
+local p = Players.LocalPlayer
+local username = p and p.Name or "Unknown"
+
+-- Danh sách người được phép & script tương ứng
+local userScripts = {
+	["ikkopolconloli"] = {
+		"https://raw.githubusercontent.com/anhhien98nd/REJOIN/refs/heads/main/--tp%20c%E1%BB%95ng%202.txt",
+		"https://raw.githubusercontent.com/anhhien98nd/REJOIN/refs/heads/main/--lock%20v%E1%BB%8B%20tr%C3%AD%202.txt",
+		"https://raw.githubusercontent.com/anhhien98nd/REJOIN/refs/heads/main/Auto%20Spam%20M1-2.txt",
+		"http://raw.githubusercontent.com/anhhien98nd/REJOIN/refs/heads/main/Shield%202.txt",
+		"https://raw.githubusercontent.com/anhhien98nd/REJOIN/refs/heads/main/reset-player.txt",
+		"https://raw.githubusercontent.com/anhhien98nd/REJOIN/refs/heads/main/rejoin.txt"
+	},
+
+	["noruo69"] = {
+		"https://raw.githubusercontent.com/anhhien98nd/REJOIN/refs/heads/main/--tp%20c%E1%BB%95ng%201.txt",
+		"https://raw.githubusercontent.com/anhhien98nd/REJOIN/refs/heads/main/--lock%20v%E1%BB%8B%20tr%C3%AD%201.txt",
+		"https://raw.githubusercontent.com/anhhien98nd/REJOIN/refs/heads/main/Auto%20Spam%20M-1.txt",
+		"https://raw.githubusercontent.com/anhhien98nd/REJOIN/refs/heads/main/Shield%201.txt"
+	}
+}
+
+-- Hàm load script an toàn
+local function safeLoad(url)
+	task.spawn(function()
+		local success, result = pcall(function()
+			local source = game:HttpGet(url)
+			if source and #source > 10 then
+				print("⚙️ Đang chạy script:", url)
+				loadstring(source)()
+			else
+				warn("⚠️ Script rỗng hoặc không tải được:", url)
+			end
+		end)
+		if not success then
+			warn("❌ Lỗi khi chạy script:", tostring(result))
+		end
+	end)
+end
+
+-- Chạy script tương ứng tài khoản
+if userScripts[username] then
+	print("✅ Đăng nhập hợp lệ:", username)
+	print("📦 Bắt đầu tải script cho tài khoản:", username)
+
+	for _, url in ipairs(userScripts[username]) do
+		safeLoad(url)
+		task.wait(0.7) -- giãn thời gian nhẹ tránh lag
+	end
+
+	print("✨ Hoàn tất tải toàn bộ script cho acc:", username)
+else
+	warn("🚫 Người dùng '" .. username .. "' không được phép. Script sẽ không chạy.")
+end
