@@ -14,17 +14,20 @@ if p.Name ~= "tênngườichơi" then
     return
 end
 
--- Thông báo trước khi rejoin
-print("[Rejoin] 🔁 Đang rejoin tài khoản:", p.Name)
+-- 🕒 Hẹn Rejoin sau 228 giây
+print("[Rejoin] ⏳ Sẽ rejoin sau 228 giây cho tài khoản:", p.Name)
 
--- Giãn 1 chút để tránh crash
-task.wait(1.5)
+task.delay(228, function()
+    print("[Rejoin] 🔁 Đang rejoin tài khoản:", p.Name)
 
-pcall(function()
-    local placeId = game.PlaceId
-    local jobId = game.JobId
-    TeleportService:TeleportToPlaceInstance(placeId, jobId, p)
+    -- Giãn 1 chút để tránh crash
+    task.wait(1.5)
+
+    pcall(function()
+        local placeId = game.PlaceId
+        local jobId = game.JobId
+        TeleportService:TeleportToPlaceInstance(placeId, jobId, p)
+    end)
+
+    print("[Rejoin] ✅ Đã gửi yêu cầu rejoin server hiện tại cho:", p.Name, "lúc:", os.date("%X"))
 end)
-
-print("[Rejoin] ✅ Đã gửi yêu cầu rejoin server hiện tại cho:", p.Name)
-
