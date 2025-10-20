@@ -4,9 +4,9 @@
 -- end_time: thời điểm kết thúc (giây kể từ khi script chạy)
 
 local schedule = {
-    {27, 31},  
-    {50, 54},  
-    {71, 75},  
+    {26, 32},  
+    {49, 55},  
+    {70, 77},  
 }
 
 -- Tìm remote: ReplicatedStorage -> BridgeNet2 -> dataRemoteEvent
