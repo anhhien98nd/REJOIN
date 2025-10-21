@@ -10,7 +10,7 @@ local userScripts = {
 		"https://raw.githubusercontent.com/anhhien98nd/REJOIN/refs/heads/main/--lock%20v%E1%BB%8B%20tr%C3%AD%202.txt",
 		"https://raw.githubusercontent.com/anhhien98nd/REJOIN/refs/heads/main/Auto%20Spam%20M1-2.txt",
 		"http://raw.githubusercontent.com/anhhien98nd/REJOIN/refs/heads/main/Shield%202.txt",
-		"https://raw.githubusercontent.com/anhhien98nd/REJOIN/refs/heads/main/reset-player.txt",
+		"https://raw.githubusercontent.com/anhhien98nd/REJOIN/refs/heads/main/reset-player",
 		"https://raw.githubusercontent.com/anhhien98nd/REJOIN/refs/heads/main/rejoin.txt"
 	},
 
