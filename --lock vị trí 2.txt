@@ -1,11 +1,11 @@
--- 🌸 Auto TP1 Lock 3 Giai Đoạn
+-- 🌸 Auto TP2 Lock 3 Giai Đoạn
 local Players = game:GetService("Players")
 local p = Players.LocalPlayer
-local STATE = { tp1 = false }
+local STATE = { tp2 = false }
 
 -- ⚙️ Hàm Lock vị trí
 local function startLock(pos)
-    STATE.tp1 = true
+    STATE.tp2 = true
     print("[AUTO] 🔒 Bắt đầu lock vị trí tại:", pos)
 
     local look
@@ -15,7 +15,7 @@ local function startLock(pos)
     end)
 
     task.spawn(function()
-        while STATE.tp1 do
+        while STATE.tp2 do
             task.wait()
             local c = p.Character
             if c then
@@ -35,8 +35,8 @@ end
 
 -- ⚙️ Hàm tắt lock
 local function stopLock()
-    if STATE.tp1 then
-        STATE.tp1 = false
+    if STATE.tp2 then
+        STATE.tp2 = false
         print("[AUTO] 🔓 Dừng lock vị trí.")
     end
 end
@@ -54,16 +54,16 @@ task.spawn(function()
     -- 🕒 Giai đoạn 2: bật sau 89s và tắt sau 151s
     task.wait(12) -- chờ đến 89s (89 - 77)
     startLock(pos)
-    print("[AUTO] 🔁 Bật lại TP1 Lock tại giây 89")
+    print("[AUTO] 🔁 Bật lại TP2 Lock tại giây 89")
     task.wait(62) -- chạy thêm cho đủ tới 151s (151 - 89)
     stopLock()
-    print("[AUTO] ✅ Tắt TP1 Lock lần 2 tại giây 151")
+    print("[AUTO] ✅ Tắt TP2 Lock lần 2 tại giây 151")
 
     -- 🕒 Giai đoạn 3: bật sau 176s và tắt sau 228s
     task.wait(25) -- chờ đến 176s (176 - 151)
     startLock(pos)
-    print("[AUTO] 🔁 Bật lại TP1 Lock tại giây 176")
+    print("[AUTO] 🔁 Bật lại TP2 Lock tại giây 176")
     task.wait(52) -- chạy thêm cho đủ tới 228s (228 - 176)
     stopLock()
-    print("[AUTO] ✅ Tắt TP1 Lock lần 3 tại giây 228")
+    print("[AUTO] ✅ Tắt TP2 Lock lần 3 tại giây 228")
 end)
