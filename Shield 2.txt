@@ -3,9 +3,9 @@
 -- Khi có ít nhất 1 cửa sổ đang active => gửi shield = true. Khi không còn cửa sổ nào => gửi shield = false.
 
 local schedule = {
- 	{14, 19}
-    {26, 31},  
-    {38, 43},  	
+    {14, 19}
+    {30, 35},  
+    {46, 51},  	
     {64, 69},   
     {76, 81},
     {88, 93},
