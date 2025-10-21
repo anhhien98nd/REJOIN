@@ -1,0 +1,104 @@
+-- 🌐 Multi Auto Teleport (Cổng 1 & Cổng 2)
+-- Tác giả: Hien | Phiên bản gộp dành cho 2 tài khoản
+
+local Players = game:GetService("Players")
+local p = Players.LocalPlayer or Players.PlayerAdded:Wait()
+local name = p.Name
+print("[MULTI TELEPORT] 👤 Player:", name)
+
+---------------------------------------------------------------------
+-- 🔹 Hàm tiện ích chung: chờ HumanoidRootPart
+local function waitForHRP()
+	local chr = p.Character or p.CharacterAdded:Wait()
+	local hrp = chr:FindFirstChild("HumanoidRootPart")
+	local waited = 0
+	while not hrp and waited < 5 do
+		task.wait(0.2)
+		waited += 0.2
+		chr = p.Character or p.CharacterAdded:Wait()
+		hrp = chr:FindFirstChild("HumanoidRootPart")
+	end
+	return hrp
+end
+
+---------------------------------------------------------------------
+-- 🌀 Script 1 — Auto Teleport Cổng 1 (cho urydyo1)
+local function autoTeleportGate1()
+	local teleportPos = Vector3.new(18.86713409423828, 0.37274569272994995, -114.86202239990234)
+
+	local function teleportToGate()
+		local hrp = waitForHRP()
+		if hrp then
+			pcall(function()
+				hrp.CFrame = CFrame.new(teleportPos + Vector3.new(0, 5, 0))
+			end)
+			print("[AUTO] ✨ Đã dịch chuyển tới Cổng 1 tại:", os.date("%X"))
+		else
+			warn("[AUTO] ⚠️ Không tìm thấy HumanoidRootPart — không thể dịch chuyển.")
+		end
+	end
+
+	task.spawn(function()
+		print("[AUTO] ⏳ Bắt đầu chuỗi Auto Teleport Cổng 1...")
+		task.wait(3)
+		print("[AUTO] 🚀 Dịch chuyển tới Cổng 1 (Lần 1 - sau 3s)")
+		teleportToGate()
+
+		task.wait(60)
+		print("[AUTO] 🚀 Dịch chuyển lại tới Cổng 1 (Lần 2 - sau 63s)")
+		teleportToGate()
+
+		task.wait(50)
+		print("[AUTO] 🚀 Dịch chuyển lần 3 tới Cổng 1 (sau 113s)")
+		teleportToGate()
+
+		print("[AUTO] ✅ Hoàn tất chuỗi dịch chuyển 3 lần Cổng 1.")
+	end)
+end
+
+---------------------------------------------------------------------
+-- 🌀 Script 2 — Auto Teleport Cổng 2 (cho ikkopolconloli)
+local function autoTeleportGate2()
+	local teleportPos = Vector3.new(18.37334884643555, 0.37274569272994995, -140.72775268554688)
+
+	local function teleportToGate()
+		local hrp = waitForHRP()
+		if hrp then
+			pcall(function()
+				hrp.CFrame = CFrame.new(teleportPos + Vector3.new(0, 5, 0))
+			end)
+			print("[AUTO] ✨ Đã dịch chuyển tới Cổng 2 tại:", os.date("%X"))
+		else
+			warn("[AUTO] ⚠️ Không tìm thấy HumanoidRootPart — không thể dịch chuyển.")
+		end
+	end
+
+	task.spawn(function()
+		print("[AUTO] ⏳ Bắt đầu chuỗi Auto Teleport Cổng 2...")
+		task.wait(3)
+		print("[AUTO] 🚀 Dịch chuyển tới Cổng 2 (Lần 1 - sau 3s)")
+		teleportToGate()
+
+		task.wait(60)
+		print("[AUTO] 🚀 Dịch chuyển lại tới Cổng 2 (Lần 2 - sau 63s)")
+		teleportToGate()
+
+		task.wait(50)
+		print("[AUTO] 🚀 Dịch chuyển lần 3 tới Cổng 2 (sau 113s)")
+		teleportToGate()
+
+		print("[AUTO] ✅ Hoàn tất chuỗi dịch chuyển 3 lần Cổng 2.")
+	end)
+end
+
+---------------------------------------------------------------------
+-- 🔸 Phân nhánh tài khoản
+if name == "urydyo1" then
+	print("[MULTI TELEPORT] 🚪 Kích hoạt Auto Teleport Cổng 1 cho urydyo1")
+	task.spawn(autoTeleportGate1)
+elseif name == "ikkopolconloli" then
+	print("[MULTI TELEPORT] 🚪 Kích hoạt Auto Teleport Cổng 2 cho ikkopolconloli")
+	task.spawn(autoTeleportGate2)
+else
+	warn("[MULTI TELEPORT] ⚠️ Không có nhiệm vụ cho tài khoản:", name)
+end
