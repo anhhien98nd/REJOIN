@@ -44,26 +44,26 @@ end
 task.spawn(function()
     local pos = Vector3.new(40, 3.63, -130.14)
 
-    -- 🕒 Giai đoạn 1: bật lúc 10s, tắt lúc 77s
+    -- 🕒 Giai đoạn 1: bật sau 10s và tắt sau 77s
     task.wait(10)
     startLock(pos)
-    task.wait(77 - 10)
+    task.wait(67) -- chạy thêm cho đủ tới 77s (77 - 10)
     stopLock()
     print("[AUTO] ✅ Kết thúc giai đoạn 1 tại 77s")
 
-    -- 🕒 Giai đoạn 2: bật lại lúc 89s, tắt lúc 151s
-    task.wait(89 - 77)
+    -- 🕒 Giai đoạn 2: bật sau 89s và tắt sau 151s
+    task.wait(12) -- chờ đến 89s (89 - 77)
     startLock(pos)
     print("[AUTO] 🔁 Bật lại TP1 Lock tại giây 89")
-    task.wait(151 - 89)
+    task.wait(62) -- chạy thêm cho đủ tới 151s (151 - 89)
     stopLock()
     print("[AUTO] ✅ Tắt TP1 Lock lần 2 tại giây 151")
 
-    -- 🕒 Giai đoạn 3: bật lúc 176s, tắt lúc 228s
-    task.wait(176 - 151)
+    -- 🕒 Giai đoạn 3: bật sau 176s và tắt sau 228s
+    task.wait(25) -- chờ đến 176s (176 - 151)
     startLock(pos)
     print("[AUTO] 🔁 Bật lại TP1 Lock tại giây 176")
-    task.wait(228 - 176)
+    task.wait(52) -- chạy thêm cho đủ tới 228s (228 - 176)
     stopLock()
     print("[AUTO] ✅ Tắt TP1 Lock lần 3 tại giây 228")
 end)
