@@ -1,30 +1,28 @@
--- 🌸 Auto TP1 Lock 3 Giai Đoạn (Sửa lỗi)
+-- 🌸 Auto TP1 Lock 3 Giai Đoạn (Bản sửa thời gian)
 local Players = game:GetService("Players")
 local p = Players.LocalPlayer
 local STATE = { tp1 = false }
 
--- Hàm chờ character + hrp sẵn sàng
+-- ⏳ Chờ character và HumanoidRootPart sẵn sàng
 local function waitForHRP()
-    local t0 = tick()
     local chr = p.Character or p.CharacterAdded:Wait()
     local hrp = chr:FindFirstChild("HumanoidRootPart")
     local waited = 0
     while not hrp and waited < 5 do
         task.wait(0.2)
-        waited = waited + 0.2
+        waited += 0.2
         chr = p.Character or p.CharacterAdded:Wait()
         hrp = chr:FindFirstChild("HumanoidRootPart")
     end
     return hrp
 end
 
--- Hàm Lock vị trí
+-- 🔒 Hàm bắt đầu lock vị trí
 local function startLock(pos)
     if STATE.tp1 then return end
     STATE.tp1 = true
     print("[AUTO] 🔒 Bắt đầu lock vị trí tại:", tostring(pos))
 
-    -- cập nhật look từ HRP nếu có
     local hrp = waitForHRP()
     local look
     if hrp then
@@ -40,9 +38,8 @@ local function startLock(pos)
             if c then
                 local h = c:FindFirstChild("HumanoidRootPart")
                 if h then
-                    -- dùng Vector3.new(0,0,0) để reset velocity (đúng)
                     pcall(function()
-                        h.Velocity = Vector3.new(0,0,0)
+                        h.Velocity = Vector3.new(0, 0, 0)
                         if look then
                             h.CFrame = CFrame.new(pos, pos + look)
                         else
@@ -55,7 +52,7 @@ local function startLock(pos)
     end)
 end
 
--- Hàm stop
+-- 🔓 Hàm dừng lock
 local function stopLock()
     if STATE.tp1 then
         STATE.tp1 = false
@@ -63,23 +60,30 @@ local function stopLock()
     end
 end
 
--- Main sequence 3 giai đoạn
+-- 🕒 Chuỗi 3 giai đoạn thời gian
 task.spawn(function()
     local pos = Vector3.new(40, 3.63, -130.14)
 
-    -- Giai đoạn 1: bật sau 10s, tắt tại 77s (tức chạy 67s sau khi bật)
+    -- Giai đoạn 1: 10s → 49s
     task.wait(10)
     startLock(pos)
-    task.wait(67) -- chạy đến 77s tổng
+    task.wait(39) -- chạy từ 10 đến 49
     stopLock()
-    print("[AUTO] ✅ Kết thúc giai đoạn 1 tại 77s")
+    print("[AUTO] ✅ Kết thúc giai đoạn 1 tại 49s")
 
-    -- Giai đoạn 2: bật lại tại 89s, tắt tại 151s
-    task.wait(12) -- 77 -> 89
+    -- Giai đoạn 2: 60s → 99s
+    task.wait(11) -- 49 đến 60
     startLock(pos)
-    print("[AUTO] 🔁 Bật lại TP1 Lock tại giây 89")
-    task.wait(62) -- 89 -> 151
+    print("[AUTO] 🔁 Bật lại TP1 Lock tại giây 60")
+    task.wait(39) -- chạy đến 99
     stopLock()
-    print("[AUTO] ✅ Tắt TP1 Lock lần 2 tại giây 151")
+    print("[AUTO] ✅ Tắt TP1 Lock lần 2 tại giây 99")
 
+    -- Giai đoạn 3: 110s → 149s
+    task.wait(11) -- 99 đến 110
+    startLock(pos)
+    print("[AUTO] 🔁 Bật lại TP1 Lock tại giây 110")
+    task.wait(39) -- chạy đến 149
+    stopLock()
+    print("[AUTO] ✅ Tắt TP1 Lock lần 3 tại giây 149")
 end)
