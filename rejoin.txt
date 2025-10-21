@@ -1,42 +1,29 @@
 -- 🌸 Auto Rejoin Script (chỉ dành cho acc "ikkopolconloli")
+
 local Players = game:GetService("Players")
 local TeleportService = game:GetService("TeleportService")
-local p = Players.LocalPlayer
+local player = Players.LocalPlayer or Players.PlayerAdded:Wait()
 
--- ⚠️ Kiểm tra LocalPlayer
-if not p then
-	warn("[Rejoin] ❌ Không tìm thấy LocalPlayer.")
-	return
-end
+-- ===== CONFIG =====
+local TARGET_NAME = "ikkopolconloli" -- chỉ acc này mới được rejoin
+local AUTO_REJOIN_TIME = 228 -- thời gian tự động rejoin (giây)
+-- ===================
 
--- ⚠️ Giới hạn cho đúng tài khoản
-if p.Name ~= "ikkopolconloli" then
-	warn("[Rejoin] 🚫 Bỏ qua — chỉ acc 'ikkopolconloli' mới được rejoin.")
-	return
-end
-
--- 🕒 Thời gian chờ (228 giây)
-local REJOIN_DELAY = 228
-
-print(string.format("[Rejoin] ⏳ Tài khoản '%s' sẽ tự động rejoin sau %d giây.", p.Name, REJOIN_DELAY))
-
-task.spawn(function()
-	task.wait(REJOIN_DELAY)
-
-	print("[Rejoin] 🔁 Đang gửi yêu cầu rejoin lại server...")
-
-	local success, err = pcall(function()
-		local placeId = game.PlaceId
-		local jobId = game.JobId
-
-		-- Thêm chút delay để executor ổn định trước khi teleport
-		task.wait(1)
-		TeleportService:TeleportToPlaceInstance(placeId, jobId, p)
-	end)
-
-	if success then
-		print(string.format("[Rejoin] ✅ Yêu cầu rejoin thành công cho '%s' tại %s", p.Name, os.date("%X")))
-	else
-		warn(string.format("[Rejoin] ⚠️ Lỗi khi rejoin: %s", err))
+-- ♻️ Hàm rejoin
+local function rejoinGame()
+	if player.Name ~= TARGET_NAME then
+		warn("[AutoRejoin] 🚫 Bỏ qua — chỉ tài khoản '" .. TARGET_NAME .. "' được phép rejoin.")
+		return
 	end
+
+	print(("[AutoRejoin] 🔁 Đang rejoin %s tại %s"):format(player.Name, os.date("%X")))
+	pcall(function()
+		TeleportService:Teleport(game.PlaceId, player)
+	end)
+end
+
+-- 🕒 Tự động rejoin sau 228 giây
+task.delay(AUTO_REJOIN_TIME, function()
+	print(("[AutoRejoin] ⏳ Sẽ tự động rejoin sau %d giây..."):format(AUTO_REJOIN_TIME))
+	rejoinGame()
 end)
