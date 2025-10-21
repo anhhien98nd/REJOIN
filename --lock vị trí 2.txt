@@ -1,4 +1,4 @@
--- 🌸 Auto TP1 Lock 3 Giai Đoạn (Bản chuẩn thời gian mới)
+-- 🌸 Auto TP2 Lock 3 Giai Đoạn (Bản chuẩn thời gian mới)
 local Players = game:GetService("Players")
 local p = Players.LocalPlayer
 local STATE = { tp2 = false }
@@ -20,7 +20,7 @@ end
 -- 🔒 Hàm bắt đầu lock vị trí
 local function startLock(pos)
 	if STATE.tp2 then return end
-	STATE.tp1 = true
+	STATE.tp2 = true
 	print("[AUTO] 🔒 Bắt đầu lock vị trí tại:", tostring(pos))
 
 	local hrp = waitForHRP()
