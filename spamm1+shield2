@@ -1,0 +1,169 @@
+-- 🔰 Auto Runner cho nhiều tài khoản (Spam M1 & Shield)
+-- Tự động chạy script phù hợp theo tên tài khoản.
+
+local player = game.Players.LocalPlayer
+local name = player and player.Name or "?"
+
+print("[Multi-Auto] Bắt đầu cho tài khoản:", name)
+
+-------------------------------------------
+-- 🔹 SCRIPT 1: Auto Spam M1 (urydyo1)
+-------------------------------------------
+local function runSpamM1()
+    print("[Auto Spam M1] Kích hoạt cho urydyo1")
+
+    local FIRE_INTERVAL = 0.4
+
+    local schedule = {
+        {15, 18},
+        {31, 34},
+        {47, 50},
+        {65, 68},
+        {81, 84},
+        {97, 100},
+        {115, 118},
+        {131, 134},
+        {147, 150},
+    }
+
+    local remote
+    pcall(function()
+        local rs = game:GetService("ReplicatedStorage")
+        local bridge = rs:FindFirstChild("BridgeNet2")
+        if bridge then remote = bridge:FindFirstChild("dataRemoteEvent") end
+        if not remote then
+            for _, v in ipairs(rs:GetDescendants()) do
+                if v.Name == "dataRemoteEvent" then
+                    remote = v
+                    break
+                end
+            end
+        end
+    end)
+
+    local bf = (type(buffer) == "table" and type(buffer.fromstring) == "function") and buffer.fromstring or function(s) return s end
+    local payload_str = "\019\000\000\0000201000113686372022\000"
+
+    local function safeFire()
+        if remote and bf then
+            pcall(function()
+                remote:FireServer({ { bf(payload_str) }, "\019" })
+            end)
+        else
+            if not safeFire._warned then
+                safeFire._warned = true
+                warn("[Auto Spam M1] remote hoặc bf không khả dụng.")
+            end
+        end
+    end
+
+    local tick0 = tick()
+
+    for i, win in ipairs(schedule) do
+        local startSec, endSec = win[1], win[2]
+        if type(startSec) ~= "number" or type(endSec) ~= "number" or endSec <= startSec then
+            warn(("[Auto Spam M1] Schedule #%d không hợp lệ (start=%s, end=%s) — bỏ qua"):format(i, tostring(startSec), tostring(endSec)))
+        else
+            task.spawn(function()
+                local startTime = tick0 + startSec
+                local endTime = tick0 + endSec
+                local toWait = startTime - tick()
+                if toWait > 0 then task.wait(toWait) end
+                if tick() >= endTime then return end
+                print(("[Auto Spam M1] Schedule #%d BẬT (%.1fs → %.1fs)"):format(i, startSec, endSec))
+                while tick() < endTime do
+                    safeFire()
+                    task.wait(FIRE_INTERVAL)
+                end
+                print(("[Auto Spam M1] Schedule #%d TẮT (%.1fs)"):format(i, endSec))
+            end)
+        end
+    end
+end
+
+-------------------------------------------
+-- 🔹 SCRIPT 2: Auto Shield (ikkopolconloli)
+-------------------------------------------
+local function runAutoShield()
+    print("[Auto Shield] Kích hoạt cho ikkopolconloli")
+
+    local schedule = {
+        {14, 19},
+        {30, 35},
+        {46, 51},
+        {64, 69},
+        {76, 81},
+        {88, 93},
+        {114, 119},
+        {126, 131},
+        {138, 143},
+    }
+
+    local remote
+    pcall(function()
+        local rs = game:GetService("ReplicatedStorage")
+        local bridge = rs:FindFirstChild("BridgeNet2")
+        if bridge then remote = bridge:FindFirstChild("dataRemoteEvent") end
+        if not remote then
+            for _, v in ipairs(rs:GetDescendants()) do
+                if v.Name == "dataRemoteEvent" then
+                    remote = v
+                    break
+                end
+            end
+        end
+    end)
+
+    local function safeFireShield(state)
+        if remote then
+            pcall(function()
+                remote:FireServer({ state, "\024" })
+            end)
+        else
+            if not safeFireShield._warned then
+                safeFireShield._warned = true
+                warn("[Auto Shield] Không tìm thấy dataRemoteEvent.")
+            end
+        end
+    end
+
+    local activeCount = 0
+    local tick0 = tick()
+
+    for i, win in ipairs(schedule) do
+        local startT, endT = win[1], win[2]
+        if type(startT) ~= "number" or type(endT) ~= "number" or endT <= startT then
+            warn(("[Auto Shield] Schedule #%d không hợp lệ (start=%s end=%s) - bỏ qua"):format(i, tostring(startT), tostring(endT)))
+        else
+            task.spawn(function()
+                local waitUntil = tick0 + startT
+                local toWait = waitUntil - tick()
+                if toWait > 0 then task.wait(toWait) end
+                if tick() >= tick0 + endT then return end
+                activeCount += 1
+                if activeCount == 1 then
+                    print(("[Auto Shield] Schedule #%d ON (%.1fs -> %.1fs) -> SHIELD = true"):format(i, startT, endT))
+                    safeFireShield(true)
+                end
+                local waitEnd = (tick0 + endT) - tick()
+                if waitEnd > 0 then task.wait(waitEnd) end
+                activeCount = math.max(0, activeCount - 1)
+                if activeCount == 0 then
+                    print(("[Auto Shield] Schedule #%d OFF (%.1fs) -> SHIELD = false"):format(i, endT))
+                    safeFireShield(false)
+                end
+            end)
+        end
+    end
+end
+
+-------------------------------------------
+-- 🔹 PHÂN NHÁNH THEO TÊN
+-------------------------------------------
+if name == "urydyo1" then
+    task.spawn(runSpamM1)
+elseif name == "ikkopolconloli" then
+    task.spawn(runAutoShield)
+else
+    warn("[Multi-Auto] Không có script nào dành cho tài khoản này:", name)
+end
