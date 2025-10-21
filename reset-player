@@ -5,29 +5,40 @@ local p = Players.LocalPlayer or Players.PlayerAdded:Wait()
 
 -- 🔒 Giới hạn tài khoản
 if p.Name ~= "ikkopolconloli" then
-    warn("[AutoReset] 🚫 Bỏ qua — chỉ tài khoản 'ikkopolconloli' mới được sử dụng script này.")
-    return
+	warn("[AutoReset] 🚫 Bỏ qua — chỉ tài khoản 'ikkopolconloli' mới được sử dụng script này.")
+	return
 end
 
--- 🕒 Các mốc reset (giây)
+-- 🕒 Các mốc thời gian reset (giây)
 local resetTimes = {79, 152}
 
-print("[AutoReset] ✅ Script khởi động cho:", p.Name)
+print(string.format("[AutoReset] ✅ Script khởi động cho '%s' lúc %s", p.Name, os.date("%X")))
 
+-- ⚙️ Hàm reset an toàn
+local function safeReset()
+	local char = p.Character
+	if not char then
+		print("[AutoReset] ⏳ Đang chờ nhân vật xuất hiện để reset...")
+		char = p.CharacterAdded:Wait()
+	end
+
+	local hrp = char:FindFirstChild("HumanoidRootPart")
+	if hrp then
+		print("[AutoReset] 🔁 Đang reset nhân vật...")
+		pcall(function()
+			char:BreakJoints()
+		end)
+		print("[AutoReset] ✅ Đã reset thành công lúc:", os.date("%X"))
+	else
+		warn("[AutoReset] ⚠️ Không thể reset — chưa tìm thấy HumanoidRootPart.")
+	end
+end
+
+-- 🕹️ Tạo luồng riêng cho từng mốc thời gian
 for _, t in ipairs(resetTimes) do
-    task.spawn(function()
-        task.wait(t)
-        local char = p.Character or p.CharacterAdded:Wait()
-        if not char then
-            warn(("[AutoReset] ⚠️ Không tìm thấy nhân vật lúc %.1fs"):format(t))
-            return
-        end
-
-        print(("[AutoReset] 🔁 Reset nhân vật sau %.1fs..."):format(t))
-        pcall(function()
-            char:BreakJoints()
-        end)
-
-        print(("[AutoReset] ✅ %s đã được reset tại %.1fs (%s)"):format(p.Name, t, os.date("%X")))
-    end)
+	task.spawn(function()
+		task.wait(t)
+		print(string.format("[AutoReset] 🕒 Đã đến mốc %.1fs — chuẩn bị reset...", t))
+		safeReset()
+	end)
 end
