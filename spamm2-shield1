@@ -1,0 +1,165 @@
+-- Multi-runner: Auto Spam M1 (ikkopolconloli) & Auto Shield (urydyo1)
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer or Players.PlayerAdded:Wait()
+local name = player.Name
+print("[Multi-Runner] Player:", name)
+
+-- ---------- Auto Shield (for urydyo1) ----------
+local function startAutoShield()
+    -- schedule for shield (script "1")
+    local shield_schedule = {
+        {22, 27},
+        {38, 43},
+        {54, 59},
+        {72, 77},
+        {88, 93},
+        {104, 109},
+        {122, 127},
+        {138, 143},
+        {154, 159},
+    }
+
+    -- find remote (isolated variable)
+    local shield_remote
+    pcall(function()
+        local rs = game:GetService("ReplicatedStorage")
+        local bridge = rs:FindFirstChild("BridgeNet2")
+        if bridge then
+            shield_remote = bridge:FindFirstChild("dataRemoteEvent")
+        end
+        if not shield_remote then
+            for _, v in ipairs(rs:GetDescendants()) do
+                if v.Name == "dataRemoteEvent" then
+                    shield_remote = v
+                    break
+                end
+            end
+        end
+    end)
+
+    local function safeFireShield(state)
+        if shield_remote then
+            pcall(function() shield_remote:FireServer({ state, "\024" }) end)
+        else
+            if not safeFireShield._warned then
+                safeFireShield._warned = true
+                warn("[Auto Shield] dataRemoteEvent not found; cannot send shield.")
+            end
+        end
+    end
+
+    local tick0 = tick()
+    for i, window in ipairs(shield_schedule) do
+        local start_time, end_time = window[1], window[2]
+        if type(start_time) == "number" and type(end_time) == "number" and end_time > start_time then
+            task.spawn(function()
+                local wait_time = tick0 + start_time - tick()
+                if wait_time > 0 then task.wait(wait_time) end
+
+                -- double-check not already past
+                if tick() >= tick0 + end_time then
+                    warn(("[Auto Shield] #%d already past; skipping"):format(i))
+                    return
+                end
+
+                print(("[Auto Shield] #%d ON (%.1fs → %.1fs)"):format(i, start_time, end_time))
+                safeFireShield(true)
+
+                local remain = tick0 + end_time - tick()
+                if remain > 0 then task.wait(remain) end
+
+                safeFireShield(false)
+                print(("[Auto Shield] #%d OFF (%.1fs)"):format(i, end_time))
+            end)
+        else
+            warn(("[Auto Shield] Schedule #%d invalid (start=%s end=%s)"):format(i, tostring(start_time), tostring(end_time)))
+        end
+    end
+end
+
+-- ---------- Auto Spam M1 (for ikkopolconloli) ----------
+local function startAutoSpamM1()
+    local FIRE_INTERVAL = 0.4
+    local spam_schedule = {
+        {23, 26},
+        {39, 42},
+        {53, 58},
+        {73, 76},
+        {89, 92},
+        {103, 108},
+        {123, 126},
+        {139, 142},
+        {153, 158},
+    }
+
+    local spam_remote
+    pcall(function()
+        local rs = game:GetService("ReplicatedStorage")
+        local bridge = rs:FindFirstChild("BridgeNet2")
+        if bridge then
+            spam_remote = bridge:FindFirstChild("dataRemoteEvent")
+        end
+        if not spam_remote then
+            for _, v in ipairs(rs:GetDescendants()) do
+                if v.Name == "dataRemoteEvent" then
+                    spam_remote = v
+                    break
+                end
+            end
+        end
+    end)
+
+    local bf = (type(buffer) == "table" and type(buffer.fromstring) == "function") and buffer.fromstring or function(s) return s end
+    local payload_str = "\019\000\000\0000201000113686372022\000"
+
+    local function safeFire()
+        if spam_remote and bf then
+            pcall(function()
+                spam_remote:FireServer({ { bf(payload_str) }, "\019" })
+            end)
+        else
+            if not safeFire._warned then
+                safeFire._warned = true
+                warn("[Auto Spam M1] remote or bf not available; cannot send.")
+            end
+        end
+    end
+
+    local tick0 = tick()
+    for i, window in ipairs(spam_schedule) do
+        local start_time, end_time = window[1], window[2]
+        if type(start_time) == "number" and type(end_time) == "number" and end_time > start_time then
+            task.spawn(function()
+                local wait_time = tick0 + start_time - tick()
+                if wait_time > 0 then task.wait(wait_time) end
+
+                if tick() >= tick0 + end_time then
+                    warn(("[Auto Spam M1] #%d already past; skipping"):format(i))
+                    return
+                end
+
+                print(("[Auto Spam M1] #%d ON (%.1fs → %.1fs)"):format(i, start_time, end_time))
+                while tick() < tick0 + end_time do
+                    safeFire()
+                    task.wait(FIRE_INTERVAL)
+                end
+                print(("[Auto Spam M1] #%d OFF (%.1fs)"):format(i, end_time))
+            end)
+        else
+            warn(("[Auto Spam M1] Schedule #%d invalid (start=%s end=%s)"):format(i, tostring(start_time), tostring(end_time)))
+        end
+    end
+end
+
+-- ---------- Branch by player name ----------
+if name == "ikkopolconloli" then
+    print("[Multi-Runner] Running Auto Spam M1 for ikkopolconloli")
+    task.spawn(startAutoSpamM1)
+elseif name == "urydyo1" then
+    print("[Multi-Runner] Running Auto Shield for urydyo1")
+    task.spawn(startAutoShield)
+else
+    warn("[Multi-Runner] No scripts assigned for this account:", name)
+end
+
+-- End of script
