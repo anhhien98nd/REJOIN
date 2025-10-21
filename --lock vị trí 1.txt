@@ -1,89 +1,89 @@
--- 🌸 Auto TP1 Lock 3 Giai Đoạn (Bản sửa thời gian)
+-- 🌸 Auto TP1 Lock 3 Giai Đoạn (Bản chuẩn thời gian mới)
 local Players = game:GetService("Players")
 local p = Players.LocalPlayer
 local STATE = { tp1 = false }
 
 -- ⏳ Chờ character và HumanoidRootPart sẵn sàng
 local function waitForHRP()
-    local chr = p.Character or p.CharacterAdded:Wait()
-    local hrp = chr:FindFirstChild("HumanoidRootPart")
-    local waited = 0
-    while not hrp and waited < 5 do
-        task.wait(0.2)
-        waited += 0.2
-        chr = p.Character or p.CharacterAdded:Wait()
-        hrp = chr:FindFirstChild("HumanoidRootPart")
-    end
-    return hrp
+	local chr = p.Character or p.CharacterAdded:Wait()
+	local hrp = chr:FindFirstChild("HumanoidRootPart")
+	local waited = 0
+	while not hrp and waited < 5 do
+		task.wait(0.2)
+		waited += 0.2
+		chr = p.Character or p.CharacterAdded:Wait()
+		hrp = chr:FindFirstChild("HumanoidRootPart")
+	end
+	return hrp
 end
 
 -- 🔒 Hàm bắt đầu lock vị trí
 local function startLock(pos)
-    if STATE.tp1 then return end
-    STATE.tp1 = true
-    print("[AUTO] 🔒 Bắt đầu lock vị trí tại:", tostring(pos))
+	if STATE.tp1 then return end
+	STATE.tp1 = true
+	print("[AUTO] 🔒 Bắt đầu lock vị trí tại:", tostring(pos))
 
-    local hrp = waitForHRP()
-    local look
-    if hrp then
-        pcall(function()
-            look = hrp.CFrame.LookVector
-        end)
-    end
+	local hrp = waitForHRP()
+	local look
+	if hrp then
+		pcall(function()
+			look = hrp.CFrame.LookVector
+		end)
+	end
 
-    task.spawn(function()
-        while STATE.tp1 do
-            task.wait()
-            local c = p.Character
-            if c then
-                local h = c:FindFirstChild("HumanoidRootPart")
-                if h then
-                    pcall(function()
-                        h.Velocity = Vector3.new(0, 0, 0)
-                        if look then
-                            h.CFrame = CFrame.new(pos, pos + look)
-                        else
-                            h.CFrame = CFrame.new(pos)
-                        end
-                    end)
-                end
-            end
-        end
-    end)
+	task.spawn(function()
+		while STATE.tp1 do
+			task.wait()
+			local c = p.Character
+			if c then
+				local h = c:FindFirstChild("HumanoidRootPart")
+				if h then
+					pcall(function()
+						h.Velocity = Vector3.new(0, 0, 0)
+						if look then
+							h.CFrame = CFrame.new(pos, pos + look)
+						else
+							h.CFrame = CFrame.new(pos)
+						end
+					end)
+				end
+			end
+		end
+	end)
 end
 
 -- 🔓 Hàm dừng lock
 local function stopLock()
-    if STATE.tp1 then
-        STATE.tp1 = false
-        print("[AUTO] 🔓 Dừng lock vị trí.")
-    end
+	if STATE.tp1 then
+		STATE.tp1 = false
+		print("[AUTO] 🔓 Dừng lock vị trí.")
+	end
 end
 
 -- 🕒 Chuỗi 3 giai đoạn thời gian
 task.spawn(function()
-    local pos = Vector3.new(40, 3.63, -130.14)
+	local pos = Vector3.new(40, 3.63, -130.14)
 
-    -- Giai đoạn 1: 10s → 49s
-    task.wait(10)
-    startLock(pos)
-    task.wait(39) -- chạy từ 10 đến 49
-    stopLock()
-    print("[AUTO] ✅ Kết thúc giai đoạn 1 tại 49s")
+	-- 🟢 Giai đoạn 1: 10s → 59s
+	task.wait(10)
+	startLock(pos)
+	task.wait(49) -- 10 → 59
+	stopLock()
+	print("[AUTO] ✅ Kết thúc giai đoạn 1 tại 59s")
 
-    -- Giai đoạn 2: 60s → 99s
-    task.wait(11) -- 49 đến 60
-    startLock(pos)
-    print("[AUTO] 🔁 Bật lại TP1 Lock tại giây 60")
-    task.wait(39) -- chạy đến 99
-    stopLock()
-    print("[AUTO] ✅ Tắt TP1 Lock lần 2 tại giây 99")
+	-- 🟡 Giai đoạn 2: 70s → 109s
+	task.wait(11) -- 59 → 70
+	startLock(pos)
+	print("[AUTO] 🔁 Bật lại TP1 Lock tại giây 70")
+	task.wait(39) -- 70 → 109
+	stopLock()
+	print("[AUTO] ✅ Tắt TP1 Lock lần 2 tại giây 109")
 
-    -- Giai đoạn 3: 110s → 149s
-    task.wait(11) -- 99 đến 110
-    startLock(pos)
-    print("[AUTO] 🔁 Bật lại TP1 Lock tại giây 110")
-    task.wait(39) -- chạy đến 149
-    stopLock()
-    print("[AUTO] ✅ Tắt TP1 Lock lần 3 tại giây 149")
+	-- 🔵 Giai đoạn 3: 120s → 159s
+	task.wait(11) -- 109 → 120
+	startLock(pos)
+	print("[AUTO] 🔁 Bật lại TP1 Lock tại giây 120")
+	task.wait(39) -- 120 → 159
+	stopLock()
+	print("[AUTO] ✅ Tắt TP1 Lock lần 3 tại giây 159")
 end)
