@@ -1,39 +1,61 @@
--- 🌸 Auto TP1 Lock 3 Giai Đoạn
+-- 🌸 Auto TP1 Lock 3 Giai Đoạn (Sửa lỗi)
 local Players = game:GetService("Players")
 local p = Players.LocalPlayer
 local STATE = { tp1 = false }
 
--- ⚙️ Hàm Lock vị trí
-local function startLock(pos)
-    STATE.tp1 = true
-    print("[AUTO] 🔒 Bắt đầu lock vị trí tại:", pos)
+-- Hàm chờ character + hrp sẵn sàng
+local function waitForHRP()
+    local t0 = tick()
+    local chr = p.Character or p.CharacterAdded:Wait()
+    local hrp = chr:FindFirstChild("HumanoidRootPart")
+    local waited = 0
+    while not hrp and waited < 5 do
+        task.wait(0.2)
+        waited = waited + 0.2
+        chr = p.Character or p.CharacterAdded:Wait()
+        hrp = chr:FindFirstChild("HumanoidRootPart")
+    end
+    return hrp
+end
 
+-- Hàm Lock vị trí
+local function startLock(pos)
+    if STATE.tp1 then return end
+    STATE.tp1 = true
+    print("[AUTO] 🔒 Bắt đầu lock vị trí tại:", tostring(pos))
+
+    -- cập nhật look từ HRP nếu có
+    local hrp = waitForHRP()
     local look
-    pcall(function()
-        look = p.Character and p.Character:FindFirstChild("HumanoidRootPart")
-            and p.Character.HumanoidRootPart.CFrame.LookVector
-    end)
+    if hrp then
+        pcall(function()
+            look = hrp.CFrame.LookVector
+        end)
+    end
 
     task.spawn(function()
         while STATE.tp1 do
             task.wait()
             local c = p.Character
             if c then
-                local hrp = c:FindFirstChild("HumanoidRootPart")
-                if hrp then
-                    hrp.Velocity = Vector3.zero
-                    if look then
-                        hrp.CFrame = CFrame.new(pos, pos + look)
-                    else
-                        hrp.CFrame = CFrame.new(pos)
-                    end
+                local h = c:FindFirstChild("HumanoidRootPart")
+                if h then
+                    -- dùng Vector3.new(0,0,0) để reset velocity (đúng)
+                    pcall(function()
+                        h.Velocity = Vector3.new(0,0,0)
+                        if look then
+                            h.CFrame = CFrame.new(pos, pos + look)
+                        else
+                            h.CFrame = CFrame.new(pos)
+                        end
+                    end)
                 end
             end
         end
     end)
 end
 
--- ⚙️ Hàm tắt lock
+-- Hàm stop
 local function stopLock()
     if STATE.tp1 then
         STATE.tp1 = false
@@ -41,29 +63,30 @@ local function stopLock()
     end
 end
 
+-- Main sequence 3 giai đoạn
 task.spawn(function()
     local pos = Vector3.new(40, 3.63, -130.14)
 
-    -- 🕒 Giai đoạn 1: bật sau 10s và tắt sau 77s
+    -- Giai đoạn 1: bật sau 10s, tắt tại 77s (tức chạy 67s sau khi bật)
     task.wait(10)
     startLock(pos)
-    task.wait(67) -- chạy thêm cho đủ tới 77s (77 - 10)
+    task.wait(67) -- chạy đến 77s tổng
     stopLock()
     print("[AUTO] ✅ Kết thúc giai đoạn 1 tại 77s")
 
-    -- 🕒 Giai đoạn 2: bật sau 89s và tắt sau 151s
-    task.wait(12) -- chờ đến 89s (89 - 77)
+    -- Giai đoạn 2: bật lại tại 89s, tắt tại 151s
+    task.wait(12) -- 77 -> 89
     startLock(pos)
     print("[AUTO] 🔁 Bật lại TP1 Lock tại giây 89")
-    task.wait(62) -- chạy thêm cho đủ tới 151s (151 - 89)
+    task.wait(62) -- 89 -> 151
     stopLock()
     print("[AUTO] ✅ Tắt TP1 Lock lần 2 tại giây 151")
 
-    -- 🕒 Giai đoạn 3: bật sau 176s và tắt sau 228s
-    task.wait(25) -- chờ đến 176s (176 - 151)
+    -- Giai đoạn 3: bật lại tại 176s, tắt tại 228s
+    task.wait(25) -- 151 -> 176
     startLock(pos)
     print("[AUTO] 🔁 Bật lại TP1 Lock tại giây 176")
-    task.wait(52) -- chạy thêm cho đủ tới 228s (228 - 176)
+    task.wait(52) -- 176 -> 228
     stopLock()
     print("[AUTO] ✅ Tắt TP1 Lock lần 3 tại giây 228")
 end)
