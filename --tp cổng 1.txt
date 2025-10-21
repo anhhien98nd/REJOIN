@@ -1,33 +1,55 @@
--- 🌀 Auto Teleport Cổng 1 (teleport 3 lần: sau 3s, 85s, và 169s kể từ lúc bắt đầu)
+-- 🌀 Auto Teleport Cổng 1 (3 lần: sau 3s, 85s, và 169s)
 local Players = game:GetService("Players")
 local p = Players.LocalPlayer
 
+-- ⚙️ Toạ độ Cổng 1
 local teleportPos = Vector3.new(18.86713409423828, 0.37274569272994995, -114.86202239990234)
 
-local function teleportToGate()
+-- 🧩 Hàm chờ HumanoidRootPart sẵn sàng
+local function waitForHRP()
 	local chr = p.Character or p.CharacterAdded:Wait()
 	local hrp = chr:FindFirstChild("HumanoidRootPart")
+	local waited = 0
+	while not hrp and waited < 5 do
+		task.wait(0.2)
+		waited += 0.2
+		chr = p.Character or p.CharacterAdded:Wait()
+		hrp = chr:FindFirstChild("HumanoidRootPart")
+	end
+	return hrp
+end
+
+-- 🚀 Hàm dịch chuyển đến Cổng 1
+local function teleportToGate()
+	local hrp = waitForHRP()
 	if hrp then
-		hrp.CFrame = CFrame.new(teleportPos + Vector3.new(0, 5, 0))
-		print("[AUTO] ✨ Đã dịch chuyển tới Cổng 1 tại:", os.date("%X"))
+		pcall(function()
+			hrp.CFrame = CFrame.new(teleportPos + Vector3.new(0, 5, 0))
+		end)
+		print("[AUTO] ✨ Đã dịch chuyển tới Cổng 1 lúc:", os.date("%X"))
 	else
 		warn("[AUTO] ⚠️ Không tìm thấy HumanoidRootPart — không thể dịch chuyển.")
 	end
 end
 
+-- 🧠 Trình tự tự động
 task.spawn(function()
+	print("[AUTO] ⏳ Bắt đầu chuỗi Auto Teleport Cổng 1...")
+
 	-- 🔹 Lần 1: sau 3 giây
 	task.wait(3)
-	print("[AUTO] 🚀 Dịch chuyển tới Cổng 1 (lần 1 sau 3 giây)")
+	print("[AUTO] 🚀 Dịch chuyển tới Cổng 1 (Lần 1 - sau 3s)")
 	teleportToGate()
 
-	-- 🔹 Lần 2: sau thêm 82 giây (tổng 85 giây kể từ đầu)
+	-- 🔹 Lần 2: sau thêm 82 giây (tổng 85s)
 	task.wait(82)
-	print("[AUTO] 🚀 Dịch chuyển lại tới Cổng 1 (lần 2 sau 85 giây)")
+	print("[AUTO] 🚀 Dịch chuyển lại tới Cổng 1 (Lần 2 - sau 85s)")
 	teleportToGate()
 
-	-- 🔹 Lần 3: sau thêm 84 giây (tổng 169 giây kể từ đầu)
+	-- 🔹 Lần 3: sau thêm 84 giây (tổng 169s)
 	task.wait(84)
-	print("[AUTO] 🚀 Dịch chuyển lần 3 tới Cổng 1 (sau 169 giây)")
+	print("[AUTO] 🚀 Dịch chuyển lần 3 tới Cổng 1 (sau 169s)")
 	teleportToGate()
+
+	print("[AUTO] ✅ Hoàn tất chuỗi dịch chuyển 3 lần Cổng 1.")
 end)
