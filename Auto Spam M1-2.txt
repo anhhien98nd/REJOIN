@@ -7,15 +7,15 @@ local FIRE_INTERVAL = 0.4 -- khoảng giữa mỗi lần gửi (giây)
 
 -- Các lần Spam M1
 local schedule = {
-    {27, 31},  
-    {50, 54},  
-    {71, 75},  
-    {103, 107},
-    {126, 130},
-    {147, 151},
-    {179, 183},
-    {202, 206},
-    {223, 227},
+    {21, 24},  
+    {33, 36},  
+    {45, 48}, 
+    {71, 74},
+    {83, 86},
+    {95, 98},
+    {121, 124},
+    {133, 136},
+    {145, 148},
 }
 
 -- Tìm remote: ReplicatedStorage → BridgeNet2 → dataRemoteEvent
