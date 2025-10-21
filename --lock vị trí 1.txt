@@ -82,11 +82,4 @@ task.spawn(function()
     stopLock()
     print("[AUTO] ✅ Tắt TP1 Lock lần 2 tại giây 151")
 
-    -- Giai đoạn 3: bật lại tại 176s, tắt tại 228s
-    task.wait(25) -- 151 -> 176
-    startLock(pos)
-    print("[AUTO] 🔁 Bật lại TP1 Lock tại giây 176")
-    task.wait(52) -- 176 -> 228
-    stopLock()
-    print("[AUTO] ✅ Tắt TP1 Lock lần 3 tại giây 228")
 end)
