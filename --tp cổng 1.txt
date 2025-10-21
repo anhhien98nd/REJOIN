@@ -1,4 +1,4 @@
--- 🌀 Auto Teleport Cổng 1 (3 lần: sau 3s, 53s, 103s)
+-- 🌀 Auto Teleport Cổng 1 (3 lần: sau 3s, 63s, 113s)
 local Players = game:GetService("Players")
 local p = Players.LocalPlayer
 
@@ -41,14 +41,14 @@ task.spawn(function()
 	print("[AUTO] 🚀 Dịch chuyển tới Cổng 1 (Lần 1 - sau 3s)")
 	teleportToGate()
 
-	-- 🔹 Lần 2: sau thêm 50 giây (tổng 53s)
-	task.wait(50)
-	print("[AUTO] 🚀 Dịch chuyển lại tới Cổng 1 (Lần 2 - sau 53s)")
+	-- 🔹 Lần 2: sau thêm 60 giây (tổng 63s)
+	task.wait(60)
+	print("[AUTO] 🚀 Dịch chuyển lại tới Cổng 1 (Lần 2 - sau 63s)")
 	teleportToGate()
 
-	-- 🔹 Lần 3: sau thêm 50 giây (tổng 103s)
+	-- 🔹 Lần 3: sau thêm 50 giây (tổng 113s)
 	task.wait(50)
-	print("[AUTO] 🚀 Dịch chuyển lần 3 tới Cổng 1 (sau 103s)")
+	print("[AUTO] 🚀 Dịch chuyển lần 3 tới Cổng 1 (sau 113s)")
 	teleportToGate()
 
 	print("[AUTO] ✅ Hoàn tất chuỗi dịch chuyển 3 lần Cổng 1.")
