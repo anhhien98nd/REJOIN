@@ -6,7 +6,7 @@ local player = Players.LocalPlayer or Players.PlayerAdded:Wait()
 
 -- ===== CONFIG =====
 local TARGET_NAME = "ikkopolconloli" -- chỉ acc này mới được rejoin
-local AUTO_REJOIN_TIME = 156 -- thời gian tự động rejoin (giây)
+local AUTO_REJOIN_TIME = 150 -- thời gian tự động rejoin (giây)
 -- ===================
 
 -- ♻️ Hàm rejoin
@@ -27,5 +27,6 @@ task.delay(AUTO_REJOIN_TIME, function()
 	print(("[AutoRejoin] ⏳ Sẽ tự động rejoin sau %d giây..."):format(AUTO_REJOIN_TIME))
 	rejoinGame()
 end)
+
 
 
