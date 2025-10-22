@@ -75,16 +75,16 @@ task.spawn(function()
 	-- 🟡 Giai đoạn 2: 87s → 153s
 	task.wait(10) -- 77 → 87
 	startLock(pos)
-	print("[AUTO] 🟡 Bật lại TP1 Lock (87s → 153s)")
-	task.wait(66) -- 87 → 153
+	print("[AUTO] 🟡 Bật lại TP1 Lock (87s → 152s)")
+	task.wait(65) -- 87 → 152
 	stopLock()
-	print("[AUTO] ✅ Tắt TP1 Lock lần 2 tại giây 153")
+	print("[AUTO] ✅ Tắt TP1 Lock lần 2 tại giây 152")
 
-	-- 🔵 Giai đoạn 3: 163s → 229s
-	task.wait(10) -- 153 → 163
+	-- 🔵 Giai đoạn 3: 162s → 229s
+	task.wait(10) -- 152 → 162
 	startLock(pos)
-	print("[AUTO] 🔵 Bật lại TP1 Lock (163s → 229s)")
-	task.wait(66) -- 163 → 229
+	print("[AUTO] 🔵 Bật lại TP1 Lock (162s → 229s)")
+	task.wait(67) -- 162 → 229
 	stopLock()
 	print("[AUTO] ✅ Tắt TP1 Lock lần 3 tại giây 229")
 end)
