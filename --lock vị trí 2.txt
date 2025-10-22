@@ -1,4 +1,4 @@
--- 🌸 Auto TP2 Lock 3 Giai Đoạn (Bản chuẩn thời gian mới)
+-- 🌸 Auto TP2 Lock 3 Giai Đoạn (Thời gian mới)
 local Players = game:GetService("Players")
 local p = Players.LocalPlayer
 local STATE = { tp2 = false }
@@ -64,26 +64,27 @@ end
 task.spawn(function()
 	local pos = Vector3.new(42.29, 3.63, -132.49)
 
-	-- 🟢 Giai đoạn 1: 10s → 59s
+	-- 🟢 Giai đoạn 1: 10s → 77s
 	task.wait(10)
 	startLock(pos)
-	task.wait(49) -- 10 → 59
+	print("[AUTO] 🟢 Giai đoạn 1 bắt đầu (10s → 77s)")
+	task.wait(67) -- 10 → 77
 	stopLock()
-	print("[AUTO] ✅ Kết thúc giai đoạn 1 tại 59s")
+	print("[AUTO] ✅ Kết thúc giai đoạn 1 tại 77s")
 
-	-- 🟡 Giai đoạn 2: 70s → 109s
-	task.wait(11) -- 59 → 70
+	-- 🟡 Giai đoạn 2: 87s → 153s
+	task.wait(10) -- 77 → 87
 	startLock(pos)
-	print("[AUTO] 🔁 Bật lại TP2 Lock tại giây 70")
-	task.wait(39) -- 70 → 109
+	print("[AUTO] 🟡 Bật lại TP2 Lock (87s → 153s)")
+	task.wait(66) -- 87 → 153
 	stopLock()
-	print("[AUTO] ✅ Tắt TP2 Lock lần 2 tại giây 109")
+	print("[AUTO] ✅ Tắt TP2 Lock lần 2 tại giây 153")
 
-	-- 🔵 Giai đoạn 3: 120s → 159s
-	task.wait(11) -- 109 → 120
+	-- 🔵 Giai đoạn 3: 163s → 229s
+	task.wait(10) -- 153 → 163
 	startLock(pos)
-	print("[AUTO] 🔁 Bật lại TP2 Lock tại giây 120")
-	task.wait(39) -- 120 → 159
+	print("[AUTO] 🔵 Bật lại TP2 Lock (163s → 229s)")
+	task.wait(66) -- 163 → 229
 	stopLock()
-	print("[AUTO] ✅ Tắt TP12 Lock lần 3 tại giây 159")
+	print("[AUTO] ✅ Tắt TP2 Lock lần 3 tại giây 229")
 end)
