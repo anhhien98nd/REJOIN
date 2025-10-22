@@ -10,7 +10,7 @@ if p.Name ~= "ikkopolconloli" then
 end
 
 -- 🕒 Các mốc thời gian reset (giây)
-local resetTimes = {76, 152}
+local resetTimes = {76, 153}
 
 print(string.format("[AutoReset] ✅ Script khởi động cho '%s' lúc %s", p.Name, os.date("%X")))
 
