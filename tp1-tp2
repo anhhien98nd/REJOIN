@@ -61,7 +61,7 @@ local function autoTeleportGate1()
 end
 
 ---------------------------------------------------------------------
--- 🌀 Script 2 — Auto Teleport Cổng 2 (cho ikkopolconloli)
+-- 🌀 Script 2 — Auto Teleport Cổng 2 (cho cauthechuaip)
 local function autoTeleportGate2()
 	local teleportPos = Vector3.new(18.37334884643555, 0.37274569272994995, -140.72775268554688)
 
@@ -104,8 +104,8 @@ end
 if name == "urydyo1" then
 	print("[MULTI TELEPORT] 🚪 Kích hoạt Auto Teleport Cổng 1 cho urydyo1")
 	task.spawn(autoTeleportGate1)
-elseif name == "ikkopolconloli" then
-	print("[MULTI TELEPORT] 🚪 Kích hoạt Auto Teleport Cổng 2 cho ikkopolconloli")
+elseif name == "cauthechuaip" then
+	print("[MULTI TELEPORT] 🚪 Kích hoạt Auto Teleport Cổng 2 cho cauthechuaip")
 	task.spawn(autoTeleportGate2)
 else
 	warn("[MULTI TELEPORT] ⚠️ Không có nhiệm vụ cho tài khoản:", name)
