@@ -22,7 +22,7 @@ local function waitForHRP()
 end
 
 ---------------------------------------------------------------------
--- 🌀 Script 1 — Auto Teleport Cổng 1 (cho urydyo1)
+-- 🌀 Script 1 — Auto Teleport Cổng 1 (cho cauthechuaip)
 local function autoTeleportGate1()
 	local teleportPos = Vector3.new(18.86713409423828, 0.37274569272994995, -114.86202239990234)
 
@@ -61,7 +61,7 @@ local function autoTeleportGate1()
 end
 
 ---------------------------------------------------------------------
--- 🌀 Script 2 — Auto Teleport Cổng 2 (cho cauthechuaip)
+-- 🌀 Script 2 — Auto Teleport Cổng 2 (cho ikkopolconloli)
 local function autoTeleportGate2()
 	local teleportPos = Vector3.new(18.37334884643555, 0.37274569272994995, -140.72775268554688)
 
@@ -101,11 +101,11 @@ end
 
 ---------------------------------------------------------------------
 -- 🔸 Phân nhánh tài khoản
-if name == "urydyo1" then
-	print("[MULTI TELEPORT] 🚪 Kích hoạt Auto Teleport Cổng 1 cho urydyo1")
+if name == "cauthechuaip" then
+	print("[MULTI TELEPORT] 🚪 Kích hoạt Auto Teleport Cổng 1 cho cauthechuaip")
 	task.spawn(autoTeleportGate1)
-elseif name == "cauthechuaip" then
-	print("[MULTI TELEPORT] 🚪 Kích hoạt Auto Teleport Cổng 2 cho cauthechuaip")
+elseif name == "ikkopolconloli" then
+	print("[MULTI TELEPORT] 🚪 Kích hoạt Auto Teleport Cổng 2 cho ikkopolconloli")
 	task.spawn(autoTeleportGate2)
 else
 	warn("[MULTI TELEPORT] ⚠️ Không có nhiệm vụ cho tài khoản:", name)
