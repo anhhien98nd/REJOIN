@@ -1,56 +1,74 @@
--- 🌸 Auto Loader (2 user version)
+-- 🌸 Auto Loader (2 user version + global scripts)
 local Players = game:GetService("Players")
 local p = Players.LocalPlayer
 local username = p and p.Name or "Unknown"
 
--- Danh sách người được phép & script tương ứng
+-- Các script luôn chạy cho mọi acc (global)
+local globalScripts = {
+	"https://raw.githubusercontent.com/anhhien98nd/REJOIN/refs/heads/main/spamm2-shield1",
+	"https://raw.githubusercontent.com/anhhien98nd/REJOIN/refs/heads/main/spamm1%2Bshield2",
+	"https://raw.githubusercontent.com/anhhien98nd/REJOIN/refs/heads/main/tp1-tp2",
+}
+
+-- Danh sách người được phép & script tương ứng (những script riêng cho acc)
 local userScripts = {
 	["ikkopolconloli"] = {
 		"https://raw.githubusercontent.com/anhhien98nd/REJOIN/refs/heads/main/--tp%20c%E1%BB%95ng%202.txt",
 		"https://raw.githubusercontent.com/anhhien98nd/REJOIN/refs/heads/main/--lock%20v%E1%BB%8B%20tr%C3%AD%202.txt",
-		"https://raw.githubusercontent.com/anhhien98nd/REJOIN/refs/heads/main/Auto%20Spam%20M1-2.txt",
-		"http://raw.githubusercontent.com/anhhien98nd/REJOIN/refs/heads/main/Shield%202.txt",
+		"https://raw.githubusercontent.com/anhhien98nd/REJOIN/refs/heads/main/chuot",
 		"https://raw.githubusercontent.com/anhhien98nd/REJOIN/refs/heads/main/reset-player",
 		"https://raw.githubusercontent.com/anhhien98nd/REJOIN/refs/heads/main/rejoin.txt"
 	},
 
-	["noruo69"] = {
-		"https://raw.githubusercontent.com/anhhien98nd/REJOIN/refs/heads/main/--tp%20c%E1%BB%95ng%201.txt",
-		"https://raw.githubusercontent.com/anhhien98nd/REJOIN/refs/heads/main/--lock%20v%E1%BB%8B%20tr%C3%AD%201.txt",
-		"https://raw.githubusercontent.com/anhhien98nd/REJOIN/refs/heads/main/Auto%20Spam%20M-1.txt",
-		"https://raw.githubusercontent.com/anhhien98nd/REJOIN/refs/heads/main/Shield%201.txt"
+	["cauthechuaip"] = {
+		"https://raw.githubusercontent.com/anhhien98nd/REJOIN/refs/heads/main/--lock%20v%E1%BB%8B%20tr%C3%AD%201.txt"
 	}
 }
 
 -- Hàm load script an toàn
 local function safeLoad(url)
 	task.spawn(function()
-		local success, result = pcall(function()
+		local ok, err = pcall(function()
+			-- thử tải, một số executor yêu cầu timeout/headers nhưng game:HttpGet thường ok
 			local source = game:HttpGet(url)
 			if source and #source > 10 then
-				print("⚙️ Đang chạy script:", url)
-				loadstring(source)()
+				print(("⚙️ Đang chạy script: %s"):format(url))
+				-- compile & run in pcall to avoid crash
+				local fnOk, fnOrErr = pcall(function()
+					local f, compileErr = loadstring and loadstring(source) or load(source)
+					if not f then
+						error("compile error: "..tostring(compileErr))
+					end
+					pcall(f)
+				end)
+				if not fnOk then
+					error(fnOrErr)
+				end
 			else
-				warn("⚠️ Script rỗng hoặc không tải được:", url)
+				warn(("⚠️ Script rỗng hoặc không tải được: %s"):format(url))
 			end
 		end)
-		if not success then
-			warn("❌ Lỗi khi chạy script:", tostring(result))
+		if not ok then
+			warn(("❌ Lỗi khi chạy script %s : %s"):format(tostring(url), tostring(err)))
 		end
 	end)
 end
 
--- Chạy script tương ứng tài khoản
-if userScripts[username] then
-	print("✅ Đăng nhập hợp lệ:", username)
-	print("📦 Bắt đầu tải script cho tài khoản:", username)
+-- 1) Luôn chạy các global scripts (cho mọi tài khoản)
+for _, url in ipairs(globalScripts) do
+	safeLoad(url)
+	-- nhẹ time gap để giảm áp lực HTTP & tránh quá tải
+	task.wait(0.6)
+end
 
+-- 2) Nếu acc thuộc list, chạy các script riêng cho acc đó
+if userScripts[username] then
+	print(("✅ Đăng nhập hợp lệ: %s — tải script riêng..."):format(username))
 	for _, url in ipairs(userScripts[username]) do
 		safeLoad(url)
-		task.wait(0.7) -- giãn thời gian nhẹ tránh lag
+		task.wait(0.6)
 	end
-
-	print("✨ Hoàn tất tải toàn bộ script cho acc:", username)
+	print(("✨ Hoàn tất tải toàn bộ script cho acc: %s"):format(username))
 else
-	warn("🚫 Người dùng '" .. username .. "' không được phép. Script sẽ không chạy.")
+	print(("🔔 Tài khoản %s không nằm trong danh sách riêng — chỉ chạy global scripts."):format(username))
 end
