@@ -1,10 +1,10 @@
--- Multi-runner: Auto Spam M1 (cauthechuaip) & Auto Shield (urydyo1)
+-- Multi-runner: Auto Spam M1 (ikkopolconloli) & Auto Shield (cauthechuaip)
 local Players = game:GetService("Players")
 local player = Players.LocalPlayer or Players.PlayerAdded:Wait()
 local name = player.Name
 print("[Multi-Runner] Player:", name)
 
--- ---------- Auto Shield (for urydyo1) ----------
+-- ---------- Auto Shield (for cauthechuaip) ----------
 local function startAutoShield()
     -- schedule for shield (script "1")
     local shield_schedule = {
@@ -80,7 +80,7 @@ local function startAutoShield()
     end
 end
 
--- ---------- Auto Spam M1 (for cauthechuaip) ----------
+-- ---------- Auto Spam M1 (for ikkopolconloli) ----------
 local function startAutoSpamM1()
     local FIRE_INTERVAL = 0.4
     local spam_schedule = {
@@ -158,11 +158,11 @@ local function startAutoSpamM1()
 end
 
 -- ---------- Branch by player name ----------
-if name == "cauthechuaip" then
-    print("[Multi-Runner] Running Auto Spam M1 for cauthechuaip")
+if name == "ikkopolconloli" then
+    print("[Multi-Runner] Running Auto Spam M1 for ikkopolconloli")
     task.spawn(startAutoSpamM1)
-elseif name == "urydyo1" then
-    print("[Multi-Runner] Running Auto Shield for urydyo1")
+elseif name == "cauthechuaip" then
+    print("[Multi-Runner] Running Auto Shield for cauthechuaip")
     task.spawn(startAutoShield)
 else
     warn("[Multi-Runner] No scripts assigned for this account:", name)
