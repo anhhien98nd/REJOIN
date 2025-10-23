@@ -7,10 +7,10 @@ local name = player and player.Name or "?"
 print("[Multi-Auto] Bắt đầu cho tài khoản:", name)
 
 -------------------------------------------
--- 🔹 SCRIPT 1: Auto Spam M1 (urydyo1)
+-- 🔹 SCRIPT 1: Auto Spam M1 (cauthechuaip)
 -------------------------------------------
 local function runSpamM1()
-    print("[Auto Spam M1] Kích hoạt cho urydyo1")
+    print("[Auto Spam M1] Kích hoạt cho cauthechuaip")
 
     local FIRE_INTERVAL = 0.4
 
@@ -86,10 +86,10 @@ local function runSpamM1()
 end
 
 -------------------------------------------
--- 🔹 SCRIPT 2: Auto Shield (cauthechuaip)
+-- 🔹 SCRIPT 2: Auto Shield (ikkopolconloli)
 -------------------------------------------
 local function runAutoShield()
-    print("[Auto Shield] Kích hoạt cho cauthechuaip")
+    print("[Auto Shield] Kích hoạt cho ikkopolconloli")
 
     local schedule = {
         {14, 19},
@@ -167,9 +167,9 @@ end
 -------------------------------------------
 -- 🔹 PHÂN NHÁNH THEO TÊN
 -------------------------------------------
-if name == "urydyo1" then
+if name == "cauthechuaip" then
     task.spawn(runSpamM1)
-elseif name == "cauthechuaip" then
+elseif name == "ikkopolconloli" then
     task.spawn(runAutoShield)
 else
     warn("[Multi-Auto] Không có script nào dành cho tài khoản này:", name)
