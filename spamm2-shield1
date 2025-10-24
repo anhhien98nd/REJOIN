@@ -1,4 +1,4 @@
--- Multi-runner: Auto Spam M1 (ikkopolconloli) & Auto Shield (vukuvuo89)
+-- Multi-runner: Auto Spam M1 (delaitrongbomtoi) & Auto Shield (vukuvuo89)
 local Players = game:GetService("Players")
 local player = Players.LocalPlayer or Players.PlayerAdded:Wait()
 local name = player.Name
@@ -80,7 +80,7 @@ local function startAutoShield()
     end
 end
 
--- ---------- Auto Spam M1 (for ikkopolconloli) ----------
+-- ---------- Auto Spam M1 (for delaitrongbomtoi) ----------
 local function startAutoSpamM1()
     local FIRE_INTERVAL = 0.4
     local spam_schedule = {
@@ -158,8 +158,8 @@ local function startAutoSpamM1()
 end
 
 -- ---------- Branch by player name ----------
-if name == "ikkopolconloli" then
-    print("[Multi-Runner] Running Auto Spam M1 for ikkopolconloli")
+if name == "delaitrongbomtoi" then
+    print("[Multi-Runner] Running Auto Spam M1 for delaitrongbomtoi")
     task.spawn(startAutoSpamM1)
 elseif name == "vukuvuo89" then
     print("[Multi-Runner] Running Auto Shield for vukuvuo89")
