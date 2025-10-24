@@ -86,10 +86,10 @@ local function runSpamM1()
 end
 
 -------------------------------------------
--- 🔹 SCRIPT 2: Auto Shield (ikkopolconloli)
+-- 🔹 SCRIPT 2: Auto Shield (delaitrongbomtoi)
 -------------------------------------------
 local function runAutoShield()
-    print("[Auto Shield] Kích hoạt cho ikkopolconloli")
+    print("[Auto Shield] Kích hoạt cho delaitrongbomtoi")
 
     local schedule = {
         {14, 19},
@@ -169,7 +169,7 @@ end
 -------------------------------------------
 if name == "vukuvuo89" then
     task.spawn(runSpamM1)
-elseif name == "ikkopolconloli" then
+elseif name == "delaitrongbomtoi" then
     task.spawn(runAutoShield)
 else
     warn("[Multi-Auto] Không có script nào dành cho tài khoản này:", name)
