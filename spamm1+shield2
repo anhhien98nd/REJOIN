@@ -7,10 +7,10 @@ local name = player and player.Name or "?"
 print("[Multi-Auto] Bắt đầu cho tài khoản:", name)
 
 -------------------------------------------
--- 🔹 SCRIPT 1: Auto Spam M1 (bimatcu2)
+-- 🔹 SCRIPT 1: Auto Spam M1 (buojda)
 -------------------------------------------
 local function runSpamM1()
-    print("[Auto Spam M1] Kích hoạt cho bimatcu2")
+    print("[Auto Spam M1] Kích hoạt cho buojda")
 
     local FIRE_INTERVAL = 0.4
 
@@ -167,7 +167,7 @@ end
 -------------------------------------------
 -- 🔹 PHÂN NHÁNH THEO TÊN
 -------------------------------------------
-if name == "bimatcu2" then
+if name == "buojda" then
     task.spawn(runSpamM1)
 elseif name == "delaitrongbomtoi" then
     task.spawn(runAutoShield)
