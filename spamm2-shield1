@@ -161,8 +161,8 @@ end
 if name == "delaitrongbomtoi" then
     print("[Multi-Runner] Running Auto Spam M1 for delaitrongbomtoi")
     task.spawn(startAutoSpamM1)
-elseif name == "yloi8jn" then
-    print("[Multi-Runner] Running Auto Shield for yloi8jn")
+elseif name == "kopphailaai" then
+    print("[Multi-Runner] Running Auto Shield for kopphailaai")
     task.spawn(startAutoShield)
 else
     warn("[Multi-Runner] No scripts assigned for this account:", name)
