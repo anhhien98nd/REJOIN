@@ -22,7 +22,7 @@ local function waitForHRP()
 end
 
 ---------------------------------------------------------------------
--- 🌀 Script 1 — Auto Teleport Cổng 1 (cho yloi8jn)
+-- 🌀 Script 1 — Auto Teleport Cổng 1 (cho kopphailaai)
 local function autoTeleportGate1()
 	local teleportPos = Vector3.new(18.86713409423828, 0.37274569272994995, -114.86202239990234)
 
