@@ -1,10 +1,10 @@
--- Multi-runner: Auto Spam M1 (delaitrongbomtoi) & Auto Shield (yloi8jn)
+-- Multi-runner: Auto Spam M1 (delaitrongbomtoi) & Auto Shield (kopphailaai)
 local Players = game:GetService("Players")
 local player = Players.LocalPlayer or Players.PlayerAdded:Wait()
 local name = player.Name
 print("[Multi-Runner] Player:", name)
 
--- ---------- Auto Shield (for yloi8jn) ----------
+-- ---------- Auto Shield (for kopphailaai) ----------
 local function startAutoShield()
     -- schedule for shield (script "1")
     local shield_schedule = {
