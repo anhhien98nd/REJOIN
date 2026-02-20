@@ -1,11 +1,11 @@
--- 🌸 Auto Reset Script (chỉ dành cho acc "delaitrongbomtoi")
+-- 🌸 Auto Reset Script (chỉ dành cho acc "432resdasd")
 
 local Players = game:GetService("Players")
 local p = Players.LocalPlayer or Players.PlayerAdded:Wait()
 
 -- 🔒 Giới hạn tài khoản
 if p.Name ~= "delaitrongbomtoi" then
-	warn("[AutoReset] 🚫 Bỏ qua — chỉ tài khoản 'delaitrongbomtoi' mới được sử dụng script này.")
+	warn("[AutoReset] 🚫 Bỏ qua — chỉ tài khoản '432resdasd' mới được sử dụng script này.")
 	return
 end
 
