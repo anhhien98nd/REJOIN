@@ -1,91 +1,136 @@
--- Auto Shield (scheduled windows, standalone)
--- Mỗi entry trong `schedule` là {start_seconds, end_seconds} tính từ lúc script bắt đầu (tick0).
--- Khi có ít nhất 1 cửa sổ đang active => gửi shield = true. Khi không còn cửa sổ nào => gửi shield = false.
+--// LocalScript (đặt trong StarterPlayerScripts hoặc inject trực tiếp)
 
-local schedule = {
-    {14, 19}
-    {30, 35},  
-    {46, 51},  	
-    {64, 69},   
-    {76, 81},
-    {88, 93},
-    {114, 119},
-    {126, 131},
-    {138, 143},
-}
+local player = game.Players.LocalPlayer
+local gui = player:WaitForChild("PlayerGui")
 
--- tìm remote: ReplicatedStorage -> BridgeNet2 -> dataRemoteEvent (fallback: tìm descendants)
-local remote
-pcall(function()
-    local rs = game:GetService("ReplicatedStorage")
-    local bridge = rs:FindFirstChild("BridgeNet2")
-    if bridge then
-        remote = bridge:FindFirstChild("dataRemoteEvent")
+-- Tạo ScreenGui
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = "ToggleGUI"
+screenGui.ResetOnSpawn = false
+screenGui.Parent = gui
+
+-- Frame chính
+local frame = Instance.new("Frame")
+frame.Size = UDim2.new(0, 180, 0, 100)
+frame.Position = UDim2.new(0.5, -90, 0.5, -50)
+frame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+frame.BorderSizePixel = 0
+frame.Parent = screenGui
+
+local corner = Instance.new("UICorner")
+corner.CornerRadius = UDim.new(0, 8)
+corner.Parent = frame
+
+-- Tiêu đề
+local title = Instance.new("TextLabel")
+title.Size = UDim2.new(1, 0, 0, 30)
+title.BackgroundTransparency = 1
+title.Text = "Toggle Control"
+title.TextColor3 = Color3.fromRGB(220, 220, 220)
+title.Font = Enum.Font.GothamBold
+title.TextSize = 18
+title.Parent = frame
+
+-- Nút Toggle (bật/tắt)
+local toggleButton = Instance.new("TextButton")
+toggleButton.Name = "ToggleBtn"
+toggleButton.Size = UDim2.new(0.8, 0, 0, 40)
+toggleButton.Position = UDim2.new(0.1, 0, 0.35, 0)
+toggleButton.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+toggleButton.TextColor3 = Color3.new(1,1,1)
+toggleButton.Font = Enum.Font.GothamSemibold
+toggleButton.TextSize = 16
+toggleButton.Text = "OFF (false)"
+toggleButton.Parent = frame
+
+local toggleCorner = Instance.new("UICorner")
+toggleCorner.CornerRadius = UDim.new(0, 6)
+toggleCorner.Parent = toggleButton
+
+-- Biến trạng thái
+local isEnabled = false
+
+toggleButton.MouseButton1Click:Connect(function()
+    isEnabled = not isEnabled
+    
+    if isEnabled then
+        toggleButton.BackgroundColor3 = Color3.fromRGB(0, 170, 100)
+        toggleButton.Text = "ON (true)"
+    else
+        toggleButton.BackgroundColor3 = Color3.fromRGB(170, 0, 0)
+        toggleButton.Text = "OFF (false)"
     end
-    if not remote then
-        for _, v in ipairs(rs:GetDescendants()) do
-            if v.Name == "dataRemoteEvent" then
-                remote = v
-                break
-            end
-        end
+    
+    -- Gửi remote theo trạng thái
+    local args = {
+        {
+            isEnabled,           -- true hoặc false
+            "\028"
+        }
+    }
+    
+    local success, err = pcall(function()
+        game:GetService("ReplicatedStorage")
+            :WaitForChild("BridgeNet2")
+            :WaitForChild("dataRemoteEvent")
+            :FireServer(unpack(args))
+    end)
+    
+    if not success then
+        warn("Lỗi khi fire remote: " .. tostring(err))
     end
 end)
 
-local function safeFireShield(state)
-    if remote then
-        pcall(function()
-            remote:FireServer({ state, "\024" })
-        end)
-    else
-        if not safeFireShield._warned then
-            safeFireShield._warned = true
-            warn("[Auto Shield] Không tìm thấy dataRemoteEvent; không gửi được yêu cầu.")
-        end
-    end
-end
+-- Nút X đóng GUI
+local closeButton = Instance.new("TextButton")
+closeButton.Size = UDim2.new(0, 26, 0, 26)
+closeButton.Position = UDim2.new(1, -30, 0, 4)
+closeButton.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
+closeButton.Text = "X"
+closeButton.TextColor3 = Color3.new(1,1,1)
+closeButton.Font = Enum.Font.GothamBold
+closeButton.TextSize = 18
+closeButton.Parent = frame
 
--- quản lý trạng thái khi có nhiều cửa sổ (đếm số cửa sổ active)
-local activeCount = 0
-local tick0 = tick()
+local closeCorner = Instance.new("UICorner")
+closeCorner.CornerRadius = UDim.new(0, 6)
+closeCorner.Parent = closeButton
 
-for i, win in ipairs(schedule) do
-    local startT, endT = win[1], win[2]
-    if type(startT) ~= "number" or type(endT) ~= "number" or endT <= startT then
-        warn(("[Auto Shield] Schedule #%d không hợp lệ (start=%s end=%s) - bỏ qua"):format(i, tostring(startT), tostring(endT)))
-    else
-        task.spawn(function()
-            -- chờ đến thời điểm bắt đầu
-            local waitUntil = tick0 + startT
-            local toWait = waitUntil - tick()
-            if toWait > 0 then task.wait(toWait) end
+closeButton.MouseButton1Click:Connect(function()
+    screenGui:Destroy()
+end)
 
-            -- nếu đã qua end time thì bỏ qua
-            if tick() >= tick0 + endT then
-                warn(("[Auto Shield] Schedule #%d đã trôi qua trước khi bắt đầu - bỏ qua."):format(i))
-                return
-            end
+-- Làm cho frame có thể kéo (draggable) - tùy chọn
+local dragging, dragInput, dragStart, startPos
 
-            -- bắt đầu cửa sổ: tăng counter; nếu từ 0 -> 1 thì bật shield
-            activeCount = activeCount + 1
-            if activeCount == 1 then
-                print(("[Auto Shield] Schedule #%d ON (%.1fs -> %.1fs) -> gửi SHIELD = true"):format(i, startT, endT))
-                safeFireShield(true)
-            else
-                print(("[Auto Shield] Schedule #%d ON (%.1fs -> %.1fs) -> activeCount=%d"):format(i, startT, endT, activeCount))
-            end
-
-            -- chờ tới end time rồi giảm counter; nếu xuống 0 thì tắt shield
-            local waitEnd = (tick0 + endT) - tick()
-            if waitEnd > 0 then task.wait(waitEnd) end
-
-            activeCount = math.max(0, activeCount - 1)
-            if activeCount == 0 then
-                print(("[Auto Shield] Schedule #%d OFF (kết thúc %.1fs) -> gửi SHIELD = false"):format(i, endT))
-                safeFireShield(false)
-            else
-                print(("[Auto Shield] Schedule #%d OFF (kết thúc %.1fs) -> còn activeCount=%d"):format(i, endT, activeCount))
+frame.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+        dragging = true
+        dragStart = input.Position
+        startPos = frame.Position
+        
+        input.Changed:Connect(function()
+            if input.UserInputState == Enum.UserInputState.End then
+                dragging = false
             end
         end)
     end
-end
+end)
+
+frame.InputChanged:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+        dragInput = input
+    end
+end)
+
+game:GetService("UserInputService").InputChanged:Connect(function(input)
+    if input == dragInput and dragging then
+        local delta = input.Position - dragStart
+        frame.Position = UDim2.new(
+            startPos.X.Scale,
+            startPos.X.Offset + delta.X,
+            startPos.Y.Scale,
+            startPos.Y.Offset + delta.Y
+        )
+    end
+end)
