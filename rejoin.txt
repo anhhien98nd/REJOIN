@@ -1,12 +1,12 @@
--- 🌸 Auto Rejoin Script (chỉ dành cho acc "delaitrongbomtoi")
+-- 🌸 Auto Rejoin Script (chỉ dành cho acc "432resdasd")
 
 local Players = game:GetService("Players")
 local TeleportService = game:GetService("TeleportService")
 local player = Players.LocalPlayer or Players.PlayerAdded:Wait()
 
 -- ===== CONFIG =====
-local TARGET_NAME = "delaitrongbomtoi" -- chỉ acc này mới được rejoin
-local AUTO_REJOIN_TIME = 230 -- thời gian tự động rejoin (giây)
+local TARGET_NAME = "432resdasd" -- chỉ acc này mới được rejoin
+local AUTO_REJOIN_TIME = 160 -- thời gian tự động rejoin (giây)
 -- ===================
 
 -- ♻️ Hàm rejoin
@@ -27,6 +27,7 @@ task.delay(AUTO_REJOIN_TIME, function()
 	print(("[AutoRejoin] ⏳ Sẽ tự động rejoin sau %d giây..."):format(AUTO_REJOIN_TIME))
 	rejoinGame()
 end)
+
 
 
 
