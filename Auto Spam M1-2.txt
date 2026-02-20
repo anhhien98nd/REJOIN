@@ -1,86 +1,260 @@
--- Auto Spam M1 (multi schedule, standalone)
--- Mỗi entry trong schedule: {start_time, end_time}
--- => start_time: thời điểm bắt đầu (tính từ lúc script bắt đầu)
--- => end_time: thời điểm kết thúc (giây)
+-- // Config
+local SPAM_DELAY = 0.6                       -- delay spam (giây)
+local DEFAULT_ENABLED = false                -- true = tự động bật spam ngay khi run script
+-- // Biến toàn cục
+local enabled = DEFAULT_ENABLED
+local loopRunning = false
+local ScreenGui = nil
+-- // Hàm fire exploit
+local function fireExploit()
+local args = {
+{
 
-local FIRE_INTERVAL = 0.4 -- khoảng giữa mỗi lần gửi (giây)
+{
 
--- Các lần Spam M1
-local schedule = {
-    {23, 26},
-    {39, 42},
-    {53, 58},
-    {73, 76},
-    {89, 92},
-    {103, 108},
-    {123, 126},
-    {139, 142},
-    {153, 158},
+buffer.fromstring("\019\000\000\0000201000101319220217\000"),
+workspace:WaitForChild("Live"):WaitForChild("BlockingGuy")
+},
+"\023"
 }
 
--- Tìm remote: ReplicatedStorage → BridgeNet2 → dataRemoteEvent
-local remote
-pcall(function()
-    local rs = game:GetService("ReplicatedStorage")
-    local bridge = rs:FindFirstChild("BridgeNet2")
-    if bridge then
-        remote = bridge:FindFirstChild("dataRemoteEvent")
-    end
-    if not remote then
-        for _, v in ipairs(rs:GetDescendants()) do
-            if v.Name == "dataRemoteEvent" then
-                remote = v
-                break
-            end
-        end
-    end
+}
+
+local success, err = pcall(function()
+game:GetService("ReplicatedStorage")
+:WaitForChild("BridgeNet2")
+:WaitForChild("dataRemoteEvent")
+:FireServer(unpack(args))
+end)
+if not success then
+warn("[Exploit] Lỗi fire: " .. tostring(err))
+end
+end
+-- // Vòng lặp spam
+
+local function spamLoop()
+loopRunning = true
+task.spawn(function()
+while loopRunning and enabled do
+fireExploit()
+task.wait(SPAM_DELAY)
+end
+end)
+end
+-- // Tạo GUI
+local function createGUI()
+
+if ScreenGui then ScreenGui:Destroy() end
+ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Parent = game:GetService("CoreGui")
+ScreenGui.Name = "ExploitToggle"
+ScreenGui.ResetOnSpawn = false
+ScreenGui.Enabled = true  -- luôn hiển thị khi tạo
+local Frame = Instance.new("Frame")
+Frame.Size = UDim2.new(0, 220, 0, 160)
+Frame.Position = UDim2.new(0.5, -110, 0.5, -80)
+Frame.BackgroundColor3 = Color3.fromRGB(28, 28, 28)
+Frame.BorderSizePixel = 0
+Frame.Parent = ScreenGui
+
+-- Tanh tiêu đề
+local TitleBar = Instance.new("Frame")
+TitleBar.Size = UDim2.new(1, 0, 0, 35)
+
+TitleBar.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+
+TitleBar.BorderSizePixel = 0
+
+TitleBar.Parent = Frame
+
+local Title = Instance.new("TextLabel")
+
+Title.Size = UDim2.new(1, -40, 1, 0)
+
+Title.Position = UDim2.new(0, 10, 0, 0)
+
+Title.BackgroundTransparency = 1
+
+Title.Text = "BlockingGuy Spam - 0.5s"
+
+Title.TextColor3 = Color3.fromRGB(220, 220, 220)
+
+Title.Font = Enum.Font.SourceSansBold
+
+Title.TextSize = 18
+
+Title.TextXAlignment = Enum.TextXAlignment.Left
+
+Title.Parent = TitleBar
+
+-- Nút X đóng GUI
+
+local CloseButton = Instance.new("TextButton")
+
+CloseButton.Size = UDim2.new(0, 30, 0, 30)
+
+CloseButton.Position = UDim2.new(1, -35, 0, 2)
+
+CloseButton.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
+
+CloseButton.Text = "X"
+
+CloseButton.TextColor3 = Color3.new(1,1,1)
+
+CloseButton.Font = Enum.Font.SourceSansBold
+
+CloseButton.TextSize = 20
+
+CloseButton.Parent = TitleBar
+
+local ToggleButton = Instance.new("TextButton")
+
+ToggleButton.Size = UDim2.new(0.8, 0, 0, 45)
+
+ToggleButton.Position = UDim2.new(0.1, 0, 0.28, 0)
+
+ToggleButton.BackgroundColor3 = enabled and Color3.fromRGB(0, 180, 100) or Color3.fromRGB(180, 0, 0)
+
+ToggleButton.Text = enabled and "BẬT (ON)" or "TẮT (OFF)"
+
+ToggleButton.TextColor3 = Color3.new(1,1,1)
+
+ToggleButton.Font = Enum.Font.SourceSansBold
+
+ToggleButton.TextSize = 18
+
+ToggleButton.Parent = Frame
+
+local StopButton = Instance.new("TextButton")
+
+StopButton.Size = UDim2.new(0.8, 0, 0, 45)
+
+StopButton.Position = UDim2.new(0.1, 0, 0.62, 0)
+
+StopButton.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
+
+StopButton.Text = "DỪNG SPAM"
+
+StopButton.TextColor3 = Color3.new(1,1,1)
+
+StopButton.Font = Enum.Font.SourceSans
+
+StopButton.TextSize = 18
+
+StopButton.Parent = Frame
+
+-- Drag GUI (kéo bằng title bar)
+
+local dragging, dragStart, startPos
+
+TitleBar.InputBegan:Connect(function(input)
+
+if input.UserInputType == Enum.UserInputType.MouseButton1 then
+
+dragging = true
+
+dragStart = input.Position
+
+startPos = Frame.Position
+
+input.Changed:Connect(function()
+
+if input.UserInputState == Enum.UserInputState.End then
+
+dragging = false
+
+end
+
 end)
 
--- buffer handler
-local bf
-if type(buffer) == "table" and type(buffer.fromstring) == "function" then
-    bf = buffer.fromstring
+end
+
+end)
+
+TitleBar.InputChanged:Connect(function(input)
+
+if input.UserInputType == Enum.UserInputType.MouseMovement and dragging then
+
+local delta = input.Position - dragStart
+
+Frame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+
+end
+
+end)
+
+-- Nút X: Đóng hẳn GUI
+
+CloseButton.MouseButton1Click:Connect(function()
+
+if ScreenGui then
+
+ScreenGui:Destroy()
+
+ScreenGui = nil
+
+loopRunning = false
+
+print("[GUI] Đã đóng GUI")
+
+end
+
+end)
+
+-- Nút bật/tắt spam
+
+ToggleButton.MouseButton1Click:Connect(function()
+
+enabled = not enabled
+
+ToggleButton.BackgroundColor3 = enabled and Color3.fromRGB(0, 180, 100) or Color3.fromRGB(180, 0, 0)
+
+ToggleButton.Text = enabled and "BẬT (ON)" or "TẮT (OFF)"
+
+if enabled then
+
+spamLoop()
+
+print("[Spam] BẬT - delay 0.5s")
+
 else
-    bf = function(s) return s end
+
+loopRunning = false
+
+print("[Spam] TẮT")
+
 end
 
-local payload_str = "\019\000\000\0000201000113686372022\000"
+end)
 
-local function safeFire()
-    if remote and bf then
-        pcall(function()
-            remote:FireServer({ { bf(payload_str) }, "\019" })
-        end)
-    else
-        if not safeFire._warned then
-            safeFire._warned = true
-            warn("[Auto Spam M1] remote hoặc bf không khả dụng; không gửi được.")
-        end
-    end
+-- Nút dừng spam (không đóng GUI)
+
+StopButton.MouseButton1Click:Connect(function()
+
+enabled = false
+
+loopRunning = false
+
+ToggleButton.BackgroundColor3 = Color3.fromRGB(180, 0, 0)
+
+ToggleButton.Text = "TẮT (OFF)"
+
+print("[Spam] ĐÃ DỪNG")
+
+end)
+
 end
 
--- MAIN LOOP (xử lý từng schedule)
-local tick0 = tick()
+-- // Tự động tạo GUI khi run script
 
-for i, window in ipairs(schedule) do
-    local start_time, end_time = window[1], window[2]
-    if type(start_time) == "number" and type(end_time) == "number" and end_time > start_time then
-        task.spawn(function()
-            -- đợi tới thời điểm bắt đầu
-            local wait_time = tick0 + start_time - tick()
-            if wait_time > 0 then task.wait(wait_time) end
+createGUI()
 
-            print(("[Auto Spam M1] #%d BẬT (%.1fs → %.1fs)"):format(i, start_time, end_time))
+-- Nếu DEFAULT_ENABLED = true thì tự động bắt đầu spam
 
-            -- spam trong khoảng thời gian hoạt động
-            while tick() < tick0 + end_time do
-                safeFire()
-                task.wait(FIRE_INTERVAL)
-            end
+if enabled then
 
-            print(("[Auto Spam M1] #%d TẮT (%.1fs)"):format(i, end_time))
-        end)
-    else
-        warn(("[Auto Spam M1] Schedule #%d không hợp lệ (start=%s, end=%s)"):format(i, tostring(start_time), tostring(end_time)))
-    end
+spamLoop()
+
 end
+
+print("[Exploit] Loaded | GUI luôn hiện | Delay = 0.5 giây")
