@@ -1,73 +1,136 @@
--- Auto Shield (multi schedule, standalone)
--- Mỗi entry trong schedule = {start_time, end_time}
--- start_time: thời điểm bắt đầu (giây kể từ khi script chạy)
--- end_time: thời điểm kết thúc (giây kể từ khi script chạy)
+--// LocalScript (đặt trong StarterPlayerScripts hoặc inject trực tiếp)
 
-local schedule = {
-    {22, 27},
-    {38, 43},
-    {54, 59},
-    {72, 77},
-    {88, 93},
-    {104, 109},
-    {122, 127},
-    {138, 143},
-    {154, 159},
-}
+local player = game.Players.LocalPlayer
+local gui = player:WaitForChild("PlayerGui")
 
--- Tìm remote: ReplicatedStorage -> BridgeNet2 -> dataRemoteEvent
-local remote
-pcall(function()
-    local rs = game:GetService("ReplicatedStorage")
-    local bridge = rs:FindFirstChild("BridgeNet2")
-    if bridge then
-        remote = bridge:FindFirstChild("dataRemoteEvent")
+-- Tạo ScreenGui
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = "ToggleGUI"
+screenGui.ResetOnSpawn = false
+screenGui.Parent = gui
+
+-- Frame chính
+local frame = Instance.new("Frame")
+frame.Size = UDim2.new(0, 180, 0, 100)
+frame.Position = UDim2.new(0.5, -90, 0.5, -50)
+frame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+frame.BorderSizePixel = 0
+frame.Parent = screenGui
+
+local corner = Instance.new("UICorner")
+corner.CornerRadius = UDim.new(0, 8)
+corner.Parent = frame
+
+-- Tiêu đề
+local title = Instance.new("TextLabel")
+title.Size = UDim2.new(1, 0, 0, 30)
+title.BackgroundTransparency = 1
+title.Text = "Toggle Control"
+title.TextColor3 = Color3.fromRGB(220, 220, 220)
+title.Font = Enum.Font.GothamBold
+title.TextSize = 18
+title.Parent = frame
+
+-- Nút Toggle (bật/tắt)
+local toggleButton = Instance.new("TextButton")
+toggleButton.Name = "ToggleBtn"
+toggleButton.Size = UDim2.new(0.8, 0, 0, 40)
+toggleButton.Position = UDim2.new(0.1, 0, 0.35, 0)
+toggleButton.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+toggleButton.TextColor3 = Color3.new(1,1,1)
+toggleButton.Font = Enum.Font.GothamSemibold
+toggleButton.TextSize = 16
+toggleButton.Text = "OFF (false)"
+toggleButton.Parent = frame
+
+local toggleCorner = Instance.new("UICorner")
+toggleCorner.CornerRadius = UDim.new(0, 6)
+toggleCorner.Parent = toggleButton
+
+-- Biến trạng thái
+local isEnabled = false
+
+toggleButton.MouseButton1Click:Connect(function()
+    isEnabled = not isEnabled
+    
+    if isEnabled then
+        toggleButton.BackgroundColor3 = Color3.fromRGB(0, 170, 100)
+        toggleButton.Text = "ON (true)"
+    else
+        toggleButton.BackgroundColor3 = Color3.fromRGB(170, 0, 0)
+        toggleButton.Text = "OFF (false)"
     end
-    if not remote then
-        for _, v in ipairs(rs:GetDescendants()) do
-            if v.Name == "dataRemoteEvent" then
-                remote = v
-                break
-            end
-        end
+    
+    -- Gửi remote theo trạng thái
+    local args = {
+        {
+            isEnabled,           -- true hoặc false
+            "\028"
+        }
+    }
+    
+    local success, err = pcall(function()
+        game:GetService("ReplicatedStorage")
+            :WaitForChild("BridgeNet2")
+            :WaitForChild("dataRemoteEvent")
+            :FireServer(unpack(args))
+    end)
+    
+    if not success then
+        warn("Lỗi khi fire remote: " .. tostring(err))
     end
 end)
 
-local function safeFireShield(state)
-    if remote then
-        pcall(function()
-            remote:FireServer({ state, "\024" })
+-- Nút X đóng GUI
+local closeButton = Instance.new("TextButton")
+closeButton.Size = UDim2.new(0, 26, 0, 26)
+closeButton.Position = UDim2.new(1, -30, 0, 4)
+closeButton.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
+closeButton.Text = "X"
+closeButton.TextColor3 = Color3.new(1,1,1)
+closeButton.Font = Enum.Font.GothamBold
+closeButton.TextSize = 18
+closeButton.Parent = frame
+
+local closeCorner = Instance.new("UICorner")
+closeCorner.CornerRadius = UDim.new(0, 6)
+closeCorner.Parent = closeButton
+
+closeButton.MouseButton1Click:Connect(function()
+    screenGui:Destroy()
+end)
+
+-- Làm cho frame có thể kéo (draggable) - tùy chọn
+local dragging, dragInput, dragStart, startPos
+
+frame.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+        dragging = true
+        dragStart = input.Position
+        startPos = frame.Position
+        
+        input.Changed:Connect(function()
+            if input.UserInputState == Enum.UserInputState.End then
+                dragging = false
+            end
         end)
-    else
-        if not safeFireShield._warned then
-            safeFireShield._warned = true
-            warn("[Auto Shield] Không tìm thấy dataRemoteEvent; không gửi được yêu cầu.")
-        end
     end
-end
+end)
 
--- MAIN LOOP (xử lý nhiều khoảng thời gian)
-local tick0 = tick()
-
-for i, window in ipairs(schedule) do
-    local start_time, end_time = window[1], window[2]
-    if type(start_time) == "number" and type(end_time) == "number" and end_time > start_time then
-        task.spawn(function()
-            -- chờ đến lúc bật
-            local wait_time = tick0 + start_time - tick()
-            if wait_time > 0 then task.wait(wait_time) end
-
-            print(("[Auto Shield] #%d BẬT (%.1fs → %.1fs)"):format(i, start_time, end_time))
-            safeFireShield(true)
-
-            -- chờ tới lúc tắt
-            local remain = tick0 + end_time - tick()
-            if remain > 0 then task.wait(remain) end
-
-            safeFireShield(false)
-            print(("[Auto Shield] #%d TẮT (%.1fs)"):format(i, end_time))
-        end)
-    else
-        warn(("[Auto Shield] Schedule #%d không hợp lệ (start=%s, end=%s)"):format(i, tostring(start_time), tostring(end_time)))
+frame.InputChanged:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+        dragInput = input
     end
-end
+end)
+
+game:GetService("UserInputService").InputChanged:Connect(function(input)
+    if input == dragInput and dragging then
+        local delta = input.Position - dragStart
+        frame.Position = UDim2.new(
+            startPos.X.Scale,
+            startPos.X.Offset + delta.X,
+            startPos.Y.Scale,
+            startPos.Y.Offset + delta.Y
+        )
+    end
+end)
