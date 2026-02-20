@@ -1,0 +1,7 @@
+local args = {
+	{
+		false,
+		"v"
+	}
+}
+game:GetService("ReplicatedStorage"):WaitForChild("BridgeNet2"):WaitForChild("dataRemoteEvent"):FireServer(unpack(args))
