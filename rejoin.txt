@@ -5,7 +5,7 @@ local TeleportService = game:GetService("TeleportService")
 local player = Players.LocalPlayer or Players.PlayerAdded:Wait()
 
 -- ===== CONFIG =====
-local AUTO_REJOIN_TIME = 181 -- thời gian tự động rejoin (giây)
+local AUTO_REJOIN_TIME = 191 -- thời gian tự động rejoin (giây)
 -- ===================
 
 -- ♻️ Hàm rejoin
@@ -21,5 +21,6 @@ task.delay(AUTO_REJOIN_TIME, function()
 	print(("[AutoRejoin] ⏳ Sẽ tự động rejoin sau %d giây..."):format(AUTO_REJOIN_TIME))
 	rejoinGame()
 end)
+
 
 
