@@ -12,8 +12,8 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local player = Players.LocalPlayer or Players.PlayerAdded:Wait()
 
 -- === CONFIG ===
-local ACC1 = "delaitrongbomtoi"
-local ACC2 = "hoi_kIDtoitu23"
+local ACC1 = "pphiphieyqu"
+local ACC2 = "ulucasko"
 
 local COORDS_ACC1 = Vector3.new(18.37334884643555, 2.37274569272994995, -140.72775268554688)
 local COORDS_ACC2 = Vector3.new(18.86713409423828, 2.37274569272994995, -114.86202239990234)
