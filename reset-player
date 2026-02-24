@@ -4,7 +4,7 @@ local Players = game:GetService("Players")
 local p = Players.LocalPlayer or Players.PlayerAdded:Wait()
 
 -- 🕒 Các mốc thời gian reset (giây)
-local resetTimes = {66, 132}
+local resetTimes = {70, 149}
 
 print(string.format("[AutoReset] ✅ Script khởi động cho '%s' lúc %s", p.Name, os.date("%X")))
 
